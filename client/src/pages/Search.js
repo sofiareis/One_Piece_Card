@@ -6,13 +6,13 @@ function Search() {
     const [data, setData] = useState(null);
     const [selectData, setSelectData] = useState([]);
     const [email, setEmail] = useState('')
-    const [message, setMessage] = useState('')
+    const [name, setName] = useState('')
     const [error, setError] = useState('')
     const [selectValue, setSelectValue] = useState('')
 
     useEffect(() => {
         let processing = true
-        axiosFetchData(processing)
+        fetchCards(processing)
         axiosFetchApi(processing)
         return () => {
             processing = false
@@ -29,8 +29,8 @@ function Search() {
         .catch(err => console.log(err))
     }
 
-    const axiosFetchData = async(processing) => {
-        await axios.get('/users')
+    const fetchCards = async(processing) => {
+        await axios.get('/card')
         .then(res => {
             if (processing) {
                 setSelectData(res.data)
@@ -41,12 +41,11 @@ function Search() {
 
     const axiosPostData = async() => {
         const postData = {
-            email: email,
-            website: selectValue,
-            message: message
+            name: name,
+            email: email
         }
 
-        await axios.post('http://localhost:3001/contact', postData)
+        await axios.post('/users/save', postData)
         .then(res => setError(<p className="success">{res.data}</p>))
     }
 
@@ -56,7 +55,7 @@ function Search() {
                 <option value="" key="none"> -- Select One -- </option>
                 {
                     selectData?.map( (item) => (
-                        <option value={item.website} key={item.website}>{item.website}</option>
+                        <option value={item.name} key={item.name}>{item.name}</option>
                     ))
                 }
             </select>
@@ -66,13 +65,12 @@ function Search() {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        console.log(email + ' | ' + message + ' | ' + selectValue)
+        console.log(email + ' | ' + name + ' | ' + selectValue)
 
-        if (!message) {
-            setError(<p className="required">Message is empty. Please type a message.</p>)
+        if (!name) {
+            setError(<p className="required">name is empty. Please type a name.</p>)
         } else {
             setError('')
-
         }
 
         setError('')
@@ -88,13 +86,13 @@ function Search() {
                 <label>Email</label>
                 <input type="text" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
 
-                <label>How Did You Hear About Us?</label>
-                <SelectDropdown />
-
-                <label>Message</label>
-                <textarea id="message" name="message" value={message} onChange={(e) => setMessage(e.target.value)}></textarea>
+                <label>Name</label>
+                <textarea id="name" name="name" value={name} onChange={(e) => setName(e.target.value)}></textarea>
                 
                 {error}
+                
+                <label>Which card do you want?</label>
+                <SelectDropdown />
 
                 <button type="submit" onClick={handleSubmit}>Submit</button>
             </form>

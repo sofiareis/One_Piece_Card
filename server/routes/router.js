@@ -1,69 +1,47 @@
 const express = require("express")
 const router = express.Router()
+const schemas = require('../models/schemas')
 
 router.get("/api", (req, res) => {
     res.json({ message: "Hello from server!" });
   });
 
-
-router.post('/contact', (req, res) => {
-    const {email, website, message} = req.body
-
-    console.log(email + ' | ' + website + ' | ' + message)
-    res.send("Message sent.")
+  
+router.post('/users/:a', async(req, res) => {
+    const {name, email} = req.body 
+    const action = req.params.a
+    console.log(action)
+  
+    switch(action) {
+      case "save":
+        const userData = {name: name, email: email}
+        console.log(name + ' | ' + email )
+        const newUser = new schemas.Users(userData)
+        const saveUser = await newUser.save()
+        if (saveUser) {
+          console.log(newUser)
+          res.send('User saved. Thank you.')
+        } else {
+          res.send('Failed to save user.')
+        }
+        break;
+  
+        default:
+          res.send('Invalid Request')
+          break
+    }
+  
+    res.end()
 })
 
-router.get("/users", (req, res) => {
-   const userData = [
-    {
-        "id": 1,
-        "name": "Leanne Graham",
-        "username": "Bret",
-        "email": "Sincere@april.biz",
-        "address": {
-          "street": "Kulas Light",
-          "suite": "Apt. 556",
-          "city": "Gwenborough",
-          "zipcode": "92998-3874",
-          "geo": {
-            "lat": "-37.3159",
-            "lng": "81.1496"
-          }
-        },
-        "phone": "1-770-736-8031 x56442",
-        "website": "hildegard.org",
-        "company": {
-          "name": "Romaguera-Crona",
-          "catchPhrase": "Multi-layered client-server neural-net",
-          "bs": "harness real-time e-markets"
-        }
-      },
-      {
-        "id": 2,
-        "name": "Ervin Howell",
-        "username": "Antonette",
-        "email": "Shanna@melissa.tv",
-        "address": {
-          "street": "Victor Plains",
-          "suite": "Suite 879",
-          "city": "Wisokyburgh",
-          "zipcode": "90566-7771",
-          "geo": {
-            "lat": "-43.9509",
-            "lng": "-34.4618"
-          }
-        },
-        "phone": "010-692-6593 x09125",
-        "website": "anastasia.net",
-        "company": {
-          "name": "Deckow-Crist",
-          "catchPhrase": "Proactive didactic contingency",
-          "bs": "synergize scalable supply-chains"
-        }
-      },
-   ]
 
-   res.send(userData)
-  })
+router.get("/card", async(req, res) => {
+  const card = schemas.Card
+  const cardData = await card.find({}).exec()
+  if (cardData) {
+    res.send(JSON.stringify(cardData))
+   } 
+})
+
 
 module.exports = router
