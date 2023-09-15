@@ -45,7 +45,7 @@ function Search() {
             email: email
         }
 
-        await axios.post('/users/save', postData)
+        await axios.post('/user', postData)
         .then(res => setError(<p className="success">{res.data}</p>))
     }
 

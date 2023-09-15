@@ -1,6 +1,7 @@
 import {createBrowserRouter, RouterProvider, Outlet} from 'react-router-dom'
 import Search from "../pages/Search";
 import Collection from "../pages/Collection";
+import Landing from "../pages/Landing";
 import Header from "./Header";
 import Card from '../pages/Card';
 
@@ -32,6 +33,10 @@ function Router() {
             children: [
                 {
                     path: "/",
+                    element: <Landing />
+                },
+                {
+                    path: "/search",
                     element: <Search />
                 },
                 {

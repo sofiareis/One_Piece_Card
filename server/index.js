@@ -3,6 +3,8 @@ const express = require("express")
 const cors = require("cors")
 const bodyParser = require("body-parser")
 const router = require('./routes/router')
+const { OAuth2Client } = require('google-auth-library');
+const cookieParser = require('cookie-parser');
 const mongoose = require("mongoose")
 
 
@@ -20,6 +22,7 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
+app.use(cookieParser());
 app.use('/', router)
 
 const dbOptions = {useNewUrlParser:true, useUnifiedTopology:true}

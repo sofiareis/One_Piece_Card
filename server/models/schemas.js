@@ -19,6 +19,7 @@ const missingSchema = new Schema({
 })
 const Missing = mongoose.model('Missing', missingSchema, 'missing')
 
+
 const wishingSchema = new Schema({
     cards: [cardSchema]
 })
@@ -36,3 +37,5 @@ const Users = mongoose.model('Users', userSchema, 'users')
 
 const mySchemas = {'Users':Users, 'Card':Card, 'CardCollection':CardCollection, 'Missing':Missing, 'Wishing':Wishing}
 module.exports = mySchemas
+
+
