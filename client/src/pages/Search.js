@@ -41,8 +41,8 @@ function Search() {
 
     const axiosPostData = async() => {
         const postData = {
-            name: name,
-            email: email
+            username: name,
+            password: email
         }
 
         await axios.post('/user', postData)
@@ -102,6 +102,8 @@ function Search() {
                     <a href="/card/001" className="card"><img className="card-img" src={require('../assets/images/OP01-001.png')} alt="OP01-001" /> </a>
                 </li>
             </ul>
+
+            <button class="logout"><a href="/">Log Out</a></button>
         </div>
     )
 }

@@ -3,7 +3,7 @@ const router = express.Router()
 const schemas = require('../models/schemas')
 const card = require('../controllers/card.controller')
 const user = require('../controllers/user.controller')
-const { OAuth2Client } = require('google-auth-library');
+const { adminAuth } = require("../middleware/auth")
 
 router.get("/api", (req, res) => {
     res.json({ message: "Hello from server!" });
@@ -41,6 +41,8 @@ router.post('/users/:a', async(req, res) => {
 // Create a new user
 router.post("/user", user.create);
 
+router.post('/login', user.login);
+
 // Retrieve all user
 router.get("/user", user.findAll);
 
@@ -48,21 +50,22 @@ router.get("/user", user.findAll);
 router.get("/user/:id", user.findOne);
 
 // Update a user with id
-router.put("/user/:id", user.update);
+router.put("/user/:id", adminAuth, user.update);
 
 // Delete a user with id
-router.delete("/user/:id", user.delete);
+router.delete("/user/:id", adminAuth, user.delete);
 
 // Delete all user
-router.delete("/user", user.deleteAll);
+router.delete("/user", adminAuth, user.deleteAll);
 
-app.post('/login/user', user.login);
+/*
+router.get('/logout/user', user.logout);
 
-app.get('/logout/user', user.logout);
+router.get('/user/checkLoginStatus', user.checkLogin);
+*/
 
-app.get('/user/checkLoginStatus', user.checkLogin);
-
-app.get('/user/authenticated/getAll', authenticateUser, async (req, res) => {
+/*
+router.get('/user/authenticated/getAll', authenticateUser, async (req, res) => {
   //authenticateUser is the middleware where we check if the use is valid/loggedin
   try {
       const data = await Login.find({});
@@ -76,7 +79,7 @@ app.get('/user/authenticated/getAll', authenticateUser, async (req, res) => {
       });
   }
 });
-
+*/
 
 /*
 router.get("/card", async(req, res) => {

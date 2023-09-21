@@ -1,12 +1,15 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios"
-import GoogleLogin from 'react-google-login';
-require('dotenv').config();
 
 function Landing() {
-    const [data, setData] = useState(null);
-    const [isLoggedIn, setLoginStatus] = useState(false);
+    const [data, setData] = useState(null)
+    //const [isLoggedIn, setLoginStatus] = useState(false);
+	const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+	const [usernameLogin, setUsernameLogin] = useState('')
+    const [passwordLogin, setPasswordLogin] = useState('')
+	const [error, setError] = useState('')
 
     useEffect(() => {
         let processing = true
@@ -26,6 +29,66 @@ function Landing() {
         .catch(err => console.log(err))
     }
 
+	const createUser = async() => {
+        const postData = {
+            username: username,
+            password: password
+        }
+
+        await axios.post('/user', postData)
+        .then(res => {
+			setError(<p className="success">{res.data}</p>)
+			data.role === "admin" ? window.location.assign('/admin') :  window.location.assign('/search')
+		})
+		.catch(err => {
+			console.log(err.message)
+		})
+        
+    }
+
+	const loginUser = async() => {
+        const postData = {
+            username: usernameLogin,
+            password: passwordLogin
+        }
+
+        await axios.post('/login', postData)
+        .then(res => setError(<p className="success">{res.data}</p>))
+		//data.role === "admin" ?  window.location.assign('/admin') :  window.location.assign('/search')
+    }
+
+	const handleCreateSubmit = (e) => {
+        e.preventDefault()
+
+        console.log(username + ' | ' + password)
+
+        if (!username) {
+            setError(<p className="required">name is empty. Please type a name.</p>)
+        } else {
+            setError('')
+        }
+
+        setError('')
+        createUser()
+    }
+
+	const handleLoginSubmit = (e) => {
+        e.preventDefault()
+
+        console.log(usernameLogin + ' | ' + passwordLogin)
+
+        if (!usernameLogin) {
+            setError(<p className="required">name is empty. Please type a name.</p>)
+        } else {
+            setError('')
+        }
+
+        setError('')
+        loginUser()
+    }
+
+
+/*
     const getAllUsers = async () => {
 		const data = await axios.get('/user');
 		console.log(data);
@@ -74,33 +137,32 @@ function Landing() {
 		getStatus();
 	}, [])
 
-
+*/
     return(
         <div>
             <p>This will be the landing page yipee</p>
             <p>{!data ? "Loading..." : data}</p>
-            <body>
-				<GoogleLogin
-					clientId={process.env.CLIENT_ID}
-					render={renderProps => (
-						<button className='btn g-sigin'
-							onClick={renderProps.onClick}
-							disabled={renderProps.disabled}
-						>
-							<p>Continue with Google</p>
-						</button>
-					)}
-					buttonText="Login"
-					onSuccess={responseGoogle}
-					onFailure={responseGoogle}
-					cookiePolicy={'single_host_origin'}
-				/>
-				<button onClick={getAllUsers}>Get All Users in db</button>
-				{isLoggedIn &&
-					<button onClick={logout}>Logout</button>
-				}
-			</body>
-            
+			<p> Create user</p>
+			<form className="createUserForm">
+                <label>Username</label>
+                <input type="text" id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+
+                <label>Password</label>
+                <textarea id="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)}></textarea>
+                {error}
+                <button type="submit" onClick={handleCreateSubmit}>Submit</button>
+            </form>
+			<p> Already have an account? Login</p>
+			<form className="loginForm">
+                <label>Username</label>
+                <input type="text" id="usernameLogin" name="usernameLogin" value={usernameLogin} onChange={(e) => setUsernameLogin(e.target.value)} />
+
+                <label>Password</label>
+                <textarea id="passwordLogin" name="passwordLogin" value={passwordLogin} onChange={(e) => setPasswordLogin(e.target.value)}></textarea>
+                {error}
+                <button type="submit" onClick={handleLoginSubmit}>Submit</button>
+            </form>
+        
         </div>
     )
 }

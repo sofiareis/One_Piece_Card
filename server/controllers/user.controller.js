@@ -1,31 +1,104 @@
 const db = require("../models/schemas")
+require('dotenv').config();
+const bcrypt = require("bcryptjs")
+const jwt = require('jsonwebtoken')
 const User = db.Users
 
 // Create and Save a new user
 exports.create = async(req, res) => {
+  const { username, password } = req.body;
     // Validate request
-    if (!req.body.name || !req.body.email) {
+    if (!username || !password) {
         res.status(400).send({ message: "Content can not be empty!" });
         return;
     }
-    // Create a user
-    const newUser = new User({
-        name: req.body.name,
-        email: req.body.email,
+    if (req.body.password.length < 5) {
+      return res.status(400).json({ message: "Password less than 5 characters" })
+    }
+    // Hash the password and create a user
+    bcrypt.hash(password, 10).then(async (hash) => {
+      await User.create({
+        username,
+        password: hash,
         cardCollection: req.body.userCollection ? req.body.userCollection : null,
         missing: req.body.missing ? req.body.missing : null,
         wishing: req.body.wishing ? req.body.wishing : null,
+      })
+      .then((user) => {
+        const maxAge = 3 * 60 * 60;
+        const token = jwt.sign(
+          { id: user._id, username, cardCollection: user.cardCollection, missing: user.missing, 
+            wishing: user.wishing, entryDate: user.entryDate, role: user.role },
+          process.env.CRYPTO,
+          {
+            expiresIn: maxAge, // 3hrs in sec
+          }
+        );
+        res.cookie("jwt", token, {
+          httpOnly: true,
+          maxAge: maxAge * 1000, // 3hrs in ms
+        });
+        res.send(
+          "User successfully created"
+        );
+      })
+      .catch((err) =>
+        res.status(400).send({
+          message: "User not successful created",
+          error: err.message,
+        })
+      );
     });
-    // Save user in the database
-    const saveUser = await newUser.save()
-    if (saveUser) {
-        console.log(newUser)
-        res.send('User saved. Thank you.')
+    
+};
+
+//Check if user exists and login
+exports.login = async(req, res) => {
+  const { username, password } = req.body
+  // Validate request
+  if (!username || !password) {
+    res.status(400).send({ message: "Content can not be empty!" });
+    return;
+  }
+  
+  await User.findOne({username})
+  .then(user => {
+    if(!user) {
+      res.status(401).send({message: "Login not successful", error: "User not found"})
     } else {
-        res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the user."})
+      // comparing given password with hashed password
+      bcrypt.compare(password, user.password).then(function (result) {
+        if (result) {
+          const maxAge = 3 * 60 * 60;
+          const token = jwt.sign(
+            { id: user._id, username, cardCollection: user.cardCollection, missing: user.missing, 
+              wishing: user.wishing, entryDate: user.entryDate, role: user.role },
+              process.env.CRYPTO,
+            {
+              expiresIn: maxAge, // 3hrs in sec
+            }
+          );
+          res.cookie("jwt", token, {
+            httpOnly: true,
+            maxAge: maxAge * 1000, // 3hrs in ms
+          });
+          res.status(201).json({
+            message: "User successfully Logged in",
+            user: user._id,
+          });
+        } else {
+          res.status(400).json({ message: "Login not succesful" });
+        }
+      });
     }
+  })
+  .catch (err => {
+    res.status(400).send({
+      message: "Some error occurred while retrieving users.",
+      error: err.message
+    });
+  });
+  
 };
 
 // Retrieve all users from the database.
@@ -44,24 +117,24 @@ exports.findAll = async(req, res) => {
 
 // Find a single user with an id
 exports.findOne = async(req, res) => {
-    const id = req.params.id;
+    const _id = req.params.id;
 
-    await User.findById(id)
+    await User.findById(_id)
       .then(data => {
         if (!data)
-          res.status(404).send({ message: "Not found user with id " + id });
+          res.status(404).send({ message: "Not found user with id " + _id });
         else res.send(data);
       })
       .catch(err => {
         res
           .status(500)
-          .send({ message: "Error retrieving user with id=" + id });
+          .send({ message: "Error retrieving user with id=" + _id });
       });
 };
 
 // Update a user by the id in the request
 exports.update = async(req, res) => {
-    if (!req.body) {
+    if (!req.body || !req.params.id) {
         return res.status(400).send({
           message: "Data to update can not be empty!"
         });
@@ -125,7 +198,7 @@ exports.deleteAll = async(req, res) => {
 
 
 
-
+/*
 exports.login = async(req, res) => {
     const client = new OAuth2Client(process.env.CLIENT_ID);
     const { authId } = req.body;
@@ -196,3 +269,25 @@ exports.login = async(req, res) => {
         });
     }
   };
+  */
+
+  /*
+
+  const newUser = new User({
+        username: username,
+        password: password,
+        cardCollection: req.body.userCollection ? req.body.userCollection : null,
+        missing: req.body.missing ? req.body.missing : null,
+        wishing: req.body.wishing ? req.body.wishing : null,
+    });
+    // Save user in the database
+    const saveUser = await newUser.save()
+    if (saveUser) {
+        console.log(newUser)
+        res.send('User saved. Thank you.')
+    } else {
+        res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the user."})
+    }
+  */

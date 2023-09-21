@@ -26,12 +26,13 @@ const wishingSchema = new Schema({
 const Wishing = mongoose.model('Wishing', wishingSchema, 'wishing')
 
 const userSchema = new Schema({
-    name: {type:String, required:true},
-    email: {type:String, required:true},
+    username: {type:String, required:true, unique:true},
+    password: {type:String, required:true, minlength: 5},
     cardCollection: {type: mongoose.Schema.Types.ObjectId, ref: 'CardCollection'},
     missing: {type: mongoose.Schema.Types.ObjectId, ref: 'Missing'},
     wishing: {type: mongoose.Schema.Types.ObjectId, ref: 'Wishing'},
-    entryDate: {type:Date, default:Date.now}
+    entryDate: {type:Date, default:Date.now},
+    role: {type: String, default: "Basic", required: true},
 })
 const Users = mongoose.model('Users', userSchema, 'users')
 
