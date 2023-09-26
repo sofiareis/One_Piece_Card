@@ -1,14 +1,20 @@
+import React from "react";
+import { useLocation } from 'react-router-dom';
+import './Header.css'
+
 function Header() {
+    const location = useLocation()
+
+    if(location.pathname === '/') {
+    return null
+    }
+
     return(
         <nav className="nav-bar">
-            <ul className="header-links">
-                <li>
-                    <a href="/search">Search</a>
-                </li>
-                <li>
-                    <a href="/collection">Collection</a>
-                </li>
-            </ul>
+            <a href="/search">Search</a>
+            <a href="/collection">Collection</a>
+            <a href="/missing">Missing</a>
+            <a href="/wishlist">Wishlist</a>
         </nav>
     )
 }

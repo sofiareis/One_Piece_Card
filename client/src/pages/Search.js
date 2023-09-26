@@ -77,6 +77,13 @@ function Search() {
         axiosPostData()
     }
 
+    //NEEDS ERROR HANDLING?
+    const logout = async() => {
+        localStorage.removeItem("user");
+        return await axios.get('/logout')
+            .then(res => {return res.data})
+    }
+
     return(
         <div>
             <p>This will be the search page yipee</p>
@@ -103,7 +110,7 @@ function Search() {
                 </li>
             </ul>
 
-            <button class="logout"><a href="/">Log Out</a></button>
+            <button className="logout" onClick={logout}><a href="/">Log Out</a></button>
         </div>
     )
 }

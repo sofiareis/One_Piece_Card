@@ -1,0 +1,19 @@
+.nav-bar{
+    background-color: rgba(44, 43, 91, 0.74);
+    font-size: 20px;
+    width: 100%;
+    padding: 20px;
+    overflow: auto;
+}
+
+.nav-bar a{
+    color: white;
+    padding: 12px;
+    width: 25%;
+    float: left;
+    text-align: center;
+}
+
+.nav-bar a:hover {
+    background-color: #000;
+  }

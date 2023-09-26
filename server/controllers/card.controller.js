@@ -1,5 +1,6 @@
 const db = require("../models/schemas")
 const Card = db.Card
+const User = db.User
 
 // Create and Save a new card
 exports.create = async(req, res) => {

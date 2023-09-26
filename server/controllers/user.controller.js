@@ -9,12 +9,22 @@ exports.create = async(req, res) => {
   const { username, password } = req.body;
     // Validate request
     if (!username || !password) {
-        res.status(400).send({ message: "Content can not be empty!" });
+        res.status(400).json({ message: "Content can not be empty!", error: "Username or password missing" });
         return;
     }
     if (req.body.password.length < 5) {
-      return res.status(400).json({ message: "Password less than 5 characters" })
+      return res.status(400).json({ message: "Password less than 5 characters", error: "Password can't have less than 5 characters" })
     }
+    let existUser = await User.find({"username" : username})
+    console.log(existUser)
+    console.log(username)
+    if(existUser.length != 0){
+      return res.status(400).json({
+        message: "User not successful created",
+        error: "Username already exists",
+      })
+    }
+
     // Hash the password and create a user
     bcrypt.hash(password, 10).then(async (hash) => {
       await User.create({
@@ -38,12 +48,13 @@ exports.create = async(req, res) => {
           httpOnly: true,
           maxAge: maxAge * 1000, // 3hrs in ms
         });
-        res.send(
-          "User successfully created"
-        );
+        res.status(201).json({
+          message: "User successfully created",
+          user: user
+        });
       })
       .catch((err) =>
-        res.status(400).send({
+        res.status(400).json({
           message: "User not successful created",
           error: err.message,
         })
@@ -57,14 +68,14 @@ exports.login = async(req, res) => {
   const { username, password } = req.body
   // Validate request
   if (!username || !password) {
-    res.status(400).send({ message: "Content can not be empty!" });
+    res.status(400).json({ message: "Content can not be empty!", error: "Username or password missing" });
     return;
   }
   
   await User.findOne({username})
   .then(user => {
     if(!user) {
-      res.status(401).send({message: "Login not successful", error: "User not found"})
+      res.status(401).json({message: "Login not successful", error: "User not found"})
     } else {
       // comparing given password with hashed password
       bcrypt.compare(password, user.password).then(function (result) {
@@ -82,18 +93,19 @@ exports.login = async(req, res) => {
             httpOnly: true,
             maxAge: maxAge * 1000, // 3hrs in ms
           });
+          console.log(user.role);
           res.status(201).json({
             message: "User successfully Logged in",
-            user: user._id,
+            user: user,
           });
         } else {
-          res.status(400).json({ message: "Login not succesful" });
+          res.status(400).json({ message: "Login not succesful", error: "Wrong password" });
         }
       });
     }
   })
   .catch (err => {
-    res.status(400).send({
+    res.status(400).json({
       message: "Some error occurred while retrieving users.",
       error: err.message
     });
@@ -105,10 +117,10 @@ exports.login = async(req, res) => {
 exports.findAll = async(req, res) => {
     await User.find({})
       .then(data => {
-        res.send(data);
+        res.status(201).json(data);
       })
       .catch(err => {
-        res.status(500).send({
+        res.status(500).json({
           message:
             err.message || "Some error occurred while retrieving users."
         });
@@ -122,20 +134,37 @@ exports.findOne = async(req, res) => {
     await User.findById(_id)
       .then(data => {
         if (!data)
-          res.status(404).send({ message: "Not found user with id " + _id });
-        else res.send(data);
+          res.status(404).json({ message: "Not found user with id " + _id });
+        else res.status(201).json(data);
       })
       .catch(err => {
         res
           .status(500)
-          .send({ message: "Error retrieving user with id=" + _id });
+          .json({ message: "Error retrieving user with id=" + _id });
       });
+};
+
+// Find a single user with an id
+exports.findOneUsername = async(req, res) => {
+  const username = req.params.username;
+
+  await User.find({"username" : username})
+    .then(data => {
+      if (!data)
+        res.status(404).json({ message: "Not found user with username " + username });
+        else res.status(201).json(data.username);
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ message: "Error retrieving user with username=" + username });
+    });
 };
 
 // Update a user by the id in the request
 exports.update = async(req, res) => {
     if (!req.body || !req.params.id) {
-        return res.status(400).send({
+        return res.status(400).json({
           message: "Data to update can not be empty!"
         });
       }
@@ -145,13 +174,13 @@ exports.update = async(req, res) => {
     await User.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
         .then(data => {
           if (!data) {
-            res.status(404).send({
+            res.status(404).json({
               message: `Cannot update user with id=${id}. Maybe user was not found!`
             });
-          } else res.send({ message: "user was updated successfully." });
+          } else res.status(201).json({ message: "user was updated successfully." });
         })
         .catch(err => {
-          res.status(500).send({
+          res.status(500).json({
             message: "Error updating user with id=" + id
           });
         });
@@ -164,17 +193,17 @@ exports.delete = async(req, res) => {
     await User.findByIdAndRemove(id)
       .then(data => {
         if (!data) {
-          res.status(404).send({
+          res.status(404).json({
             message: `Cannot delete user with id=${id}. Maybe user was not found!`
           });
         } else {
-          res.send({
+          res.status(201).json({
             message: "user was deleted successfully!"
           });
         }
       })
       .catch(err => {
-        res.status(500).send({
+        res.status(500).json({
           message: "Could not delete user with id=" + id
         });
       });
@@ -184,12 +213,12 @@ exports.delete = async(req, res) => {
 exports.deleteAll = async(req, res) => {
     await User.deleteMany({})
     .then(data => {
-      res.send({
+      res.status(201).json({
         message: `${data.deletedCount} users were deleted successfully!`
       });
     })
     .catch(err => {
-      res.status(500).send({
+      res.status(500).json({
         message:
           err.message || "Some error occurred while removing all users."
       });
@@ -229,12 +258,12 @@ exports.login = async(req, res) => {
         //the value of the cookie is a jwt, created using the email id of the google user
         //later on each call we will deconde this message using secret key and check if user is authenticated
   
-        res.status(200).cookie('login', loginToken, { expire: 3600000 + Date.now() }).send({
+        res.status(200).cookie('login', loginToken, { expire: 3600000 + Date.now() }).json({
             success: true
         });
     }
     catch (e) {
-        res.status(500).send({
+        res.status(500).json({
             error: e
         });
     }
@@ -244,12 +273,12 @@ exports.login = async(req, res) => {
   exports.logout = async(req, res) => {
     //logout function
     try {
-        res.clearCookie('login').send({
+        res.clearCookie('login').json({
             'success': true
         });
     }
     catch (e) {
-        res.status(500).send({
+        res.status(500).json({
             error: e
         });
     }
@@ -259,12 +288,12 @@ exports.login = async(req, res) => {
   exports.checkLogin = async(req, res) => {
     //check if user is logged in already
     try {
-        res.status(200).send({
+        res.status(200).json({
             'success': true
         });
     }
     catch (e) {
-        res.status(500).send({
+        res.status(500).json({
             error: e
         });
     }
@@ -284,9 +313,9 @@ exports.login = async(req, res) => {
     const saveUser = await newUser.save()
     if (saveUser) {
         console.log(newUser)
-        res.send('User saved. Thank you.')
+        res.json('User saved. Thank you.')
     } else {
-        res.status(500).send({
+        res.status(500).json({
         message:
           err.message || "Some error occurred while creating the user."})
     }
