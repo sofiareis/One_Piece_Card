@@ -1,5 +1,12 @@
 .Search{
     font-size: 20px;
+    margin: 40px;
+}
+
+.Search-title{
+    margin-left: 30px;
+    margin-bottom: 0px;
+    font-size: 40px;
 }
 .Search-search{
     display: block;
@@ -51,20 +58,22 @@
 
 .Search-form-tags{
    display: flex;
+   flex-direction: column;
    flex-wrap: wrap;
    margin-top: 20px;
+   align-items:flex-start;
 }
 
 .Search-form-type{
-   width: 600px;
+   
 }
 
 .Search-form-color{
-    width: 600px;
+   
  }
 
  .Search-form-rarity{
-    width: 600px;
+
  }
 
 .Search-form-type-cards{
@@ -74,8 +83,8 @@
 }
 
 .Search-form-type-cards .checkBtn{
-    width: 63px;
-    font-size: 12px;
+    width: 100px;
+    font-size: 15px;
     margin: 0px;
     padding: 0;
     cursor: pointer;
@@ -83,14 +92,12 @@
     display: inline-block;
     text-align: center;
     border: solid 2px #000;
+    margin-left: 5px;
+    margin-right: 5px;
+    background-color: #EDDFBC;
 }
 
 .checkBtn:hover {
-    background: #000;
-    color: #fff;
-}
-
-a.checked {
     background: #000;
     color: #fff;
 }
@@ -104,13 +111,34 @@ input:checked+label {
     display: none;
 }
 
+.Search-button{
+    display: grid;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
 .Search-form-submit{
-    align-self: center;
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     justify-self: center;
-    margin-left: 30px;
     border-radius: 10px;
     border: 1px solid white;
     text-align: center;
     width: 300px;
+    font-size: 20px;
+    height: 60px;
+    align-content: center;
+    color: white;
+    background-color: rgba(44, 43, 91, 0.74);
+}
+
+.Search-card{
+    display: flex;
+    flex-direction: row;
+}
+
+.Search-card li{
+    list-style-type: none;
+    padding: 10px 40px;
 }

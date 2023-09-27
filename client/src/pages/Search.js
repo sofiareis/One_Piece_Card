@@ -38,10 +38,14 @@ function Search() {
     const fetchCardsCondition = async(e) => {
         e.preventDefault()
 
+        let leader = false;
+
         const type = [];
         for (var key in checkType){
-            if(checkType[key])
+            if(checkType[key]){
                 type.push(key);
+                key == "Leader" ? leader = true : leader = leader;
+            }
         }
 
         const color = [];
@@ -52,8 +56,15 @@ function Search() {
 
         const rarity = [];
         for (var key in checkRarity){
-            if(checkRarity[key])
+            if(checkRarity[key]){
                 rarity.push(key);
+                key == "Leader" ? leader = true : leader = leader;
+            }
+        }
+
+        if(leader){
+            type.push("Leader");
+            rarity.push("Leader");
         }
         
 
@@ -128,9 +139,7 @@ function Search() {
 
     return(
         <div className="Search">
-            <p>This will be the search page yipee</p>
-            <p>{!data ? "Loading..." : data}</p>
-            <p>Card List/ Search for cards</p>
+            <p className="Search-title">Search for cards</p>
             <div className="Search-search">
                 <form className="Search-form">
                     <div className="Search-form-choose">
@@ -141,7 +150,6 @@ function Search() {
                         <div className="Search-form-type">
                             <p>Card Type</p>
                             <div className="Search-form-type-cards">
-                                <a href="javascript:void(0);" className="checkbtnAll checked checkBtn">ALL</a>
                                 {cardType.map((value, index) => {
                                     return(
                                         <>
@@ -157,7 +165,6 @@ function Search() {
                         <div className="Search-form-color">
                             <p>Card Color</p>
                             <div className="Search-form-type-cards">
-                                <a href="javascript:void(0);" className="checkbtnAll checked checkBtn">ALL</a>
                                 {cardColor.map((value, index) => {
                                     return(
                                         <>
@@ -173,7 +180,6 @@ function Search() {
                         <div className="Search-form-rarity">
                             <p>Card Rarity</p>
                             <div className="Search-form-type-cards">
-                                <a href="javascript:void(0);" className="checkbtnAll checked checkBtn">ALL</a>
                                 {cardRarity.map((value, index) => {
                                     return(
                                         <>
@@ -187,13 +193,20 @@ function Search() {
                             </div>
                         </div>
                     </div>
-                    <button type="submit" className="Search-form-submit" onClick={fetchCardsCondition}>Search</button>
+                    <div className="Search-button">
+                        <button type="submit" className="Search-form-submit" onClick={fetchCardsCondition}>Search</button>
+                    </div>
                 </form>
             </div>
-            
             <ul>
                 {selectCard?.map( (item) => (
-                    <li key={item.name}>{item.name} {item.deck}</li>
+                    <div className="Search-card">
+                        <li key={item.name} className="Search-card-name">{item.name}</li>
+                        <li key={item.deck} className="Search-card-name">{item.deck}</li>
+                        <li key={item.type} className="Search-card-name">{item.type}</li>
+                        <li key={item.color} className="Search-card-name">{item.color}</li>
+                        <li key={item.rarity} className="Search-card-name">{item.rarity}</li>
+                    </div>
                 ))}
             </ul>
 
