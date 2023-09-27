@@ -48,7 +48,7 @@ function Landing() {
 		.catch(err => {
 			setError(<p className="error">{err.response.data.error}</p>)
             console.log(err.response.data.message)
-            setData("loaded")
+            //setData("loaded")
 		})
         
     }
@@ -70,13 +70,13 @@ function Landing() {
         }).catch(err => {
             setError(<p className="error">{err.response.data.error}</p>)
             console.log(err.response.data.message)
-            setData("loaded")
+           // setData("loaded")
 		})
     }
 
 	const handleCreateSubmit = (e) => {
         e.preventDefault()
-        setData(null);
+        //setData(null);
         console.log(username + ' | ' + password)
         if (!username) {
             setError(<p className="required">name is empty. Please type a name.</p>)
@@ -90,7 +90,7 @@ function Landing() {
 
 	const handleLoginSubmit = (e) => {
         e.preventDefault()
-        setData(null);
+        //setData(null);
         console.log(usernameLogin + ' | ' + passwordLogin)
         if (!usernameLogin) {
             setError(<p className="required">name is empty. Please type a name.</p>)

@@ -4,6 +4,7 @@ const schemas = require('../models/schemas')
 const card = require('../controllers/card.controller')
 const user = require('../controllers/user.controller')
 const { adminAuth, userAuth} = require("../middleware/auth")
+const { urlencoded } = require("body-parser")
 
 router.get("/api", (req, res) => {
     res.json({ message: "Hello from server!" });
@@ -36,8 +37,11 @@ router.post("/card", adminAuth, card.create);
 // Retrieve all card
 router.get("/card", userAuth, card.findAll);
 
-// Retrieve all cards based on deck
-router.get("/card/:deck", userAuth, card.findAllDeck);
+// Retrieve all cards by deck
+router.get("/deck", userAuth, card.findDeck);
+
+// Retrieve all cards by condition
+router.get("/card/condition", userAuth, card.findCard);
 
 // Retrieve a single card with id
 router.get("/card/:id", userAuth, card.findOne);

@@ -1,82 +1,122 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios"
+import { deck, cardType, rarity, cardColor, cardRarity } from "../components/CardInfo";
+import './Search.css'
 
 function Search() {
     const [data, setData] = useState(null);
-    const [selectData, setSelectData] = useState([]);
-    const [email, setEmail] = useState('')
-    const [name, setName] = useState('')
+
+    const [selectCard, setSelectCard] = useState([]);
     const [error, setError] = useState('')
-    const [selectValue, setSelectValue] = useState('')
+    
+    const [searchCard, setSearchCard] = useState('');
+    const [checkType, setCheckType] = useState(cardType.reduce((o, key) => ({ ...o, [key]: false}), {}))
+    const [checkColor, setCheckColor] = useState(cardColor.reduce((o, key) => ({ ...o, [key]: false}), {}))
+    const [checkRarity, setCheckRarity] = useState(cardRarity.reduce((o, key) => ({ ...o, [key]: false}), {}))
+    const [selectSet, setSelectSet] = useState('')
 
     useEffect(() => {
         let processing = true
         fetchCards(processing)
-        axiosFetchApi(processing)
         return () => {
             processing = false
         }
     }, []);
 
-    const axiosFetchApi = async(processing) => {
-        await axios.get('/api')
-        .then(res => {
-            if (processing) {
-                setData(res.data.message)
-            }
-        })
-        .catch(err => console.log(err))
-    }
-
     const fetchCards = async(processing) => {
         await axios.get('/card')
         .then(res => {
             if (processing) {
-                setSelectData(res.data)
+                setSelectCard(res.data)
             }
         })
         .catch(err => console.log(err))
     }
 
-    const axiosPostData = async() => {
-        const postData = {
-            username: name,
-            password: email
+    //NEED TO FIX LEADER ERROR
+    const fetchCardsCondition = async(e) => {
+        e.preventDefault()
+
+        const type = [];
+        for (var key in checkType){
+            if(checkType[key])
+                type.push(key);
         }
 
-        await axios.post('/user', postData)
-        .then(res => setError(<p className="success">{res.data}</p>))
+        const color = [];
+        for (var key in checkColor){
+            if(checkColor[key])
+                color.push(key);
+        }
+
+        const rarity = [];
+        for (var key in checkRarity){
+            if(checkRarity[key])
+                rarity.push(key);
+        }
+        
+
+        const params = {
+            params: {
+                deck: selectSet,
+                type: type,
+                rarity: rarity,
+                color: color,
+            }
+        }
+        /*
+        const params = {
+            params: {
+                deck: selectSet,
+                type:  { "$in" : cardType },
+                //type:  { "$in" : },
+            }
+        }
+        */
+        console.log(params)
+        await axios.get('/card/condition', params)
+        .then(res => {
+            setSelectCard(res.data)
+        })
+        .catch(err => console.log(err))
     }
 
-    const SelectDropdown = () => {
+    const SelectSetDropdown = () => {
         return (
-            <select value={selectValue} onChange={(e) => setSelectValue(e.target.value)}>
-                <option value="" key="none"> -- Select One -- </option>
+            <select className="Search-form-dropdown" value={selectSet} onChange={(e) => {
+                setSelectSet(e.target.value)
+                }}>
+                <option value="" key="none"> Choose Set </option>
                 {
-                    selectData?.map( (item) => (
-                        <option value={item.name} key={item.name}>{item.name}</option>
+                    deck?.map( (item) => (
+                        <option value={item} key={item}>{item}</option>
                     ))
                 }
             </select>
         )
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
 
-        console.log(email + ' | ' + name + ' | ' + selectValue)
+    const handleTypeChange = ({target}) => {
+        console.log(checkType)
+        
+        setCheckType(s => ({ ...s, [target.value]: !s[target.value] }));
+    };
 
-        if (!name) {
-            setError(<p className="required">name is empty. Please type a name.</p>)
-        } else {
-            setError('')
-        }
+    const handleColorChange = ({target}) => {
+        console.log(checkType)
+        
+        setCheckColor(s => ({ ...s, [target.value]: !s[target.value] }));
+    };
 
-        setError('')
-        axiosPostData()
-    }
+    const handleRarityChange = ({target}) => {
+        console.log(checkType)
+        
+        setCheckRarity(s => ({ ...s, [target.value]: !s[target.value] }));
+    };
 
+    
     //NEEDS ERROR HANDLING?
     const logout = async() => {
         localStorage.removeItem("user");
@@ -84,25 +124,79 @@ function Search() {
             .then(res => {return res.data})
     }
 
+    
+
     return(
-        <div>
+        <div className="Search">
             <p>This will be the search page yipee</p>
             <p>{!data ? "Loading..." : data}</p>
+            <p>Card List/ Search for cards</p>
+            <div className="Search-search">
+                <form className="Search-form">
+                    <div className="Search-form-choose">
+                        <input type="text" placeholder="Search Card..." id="searchCard" name="searchCard" value={searchCard} onChange={(e) => setSearchCard(e.target.value)} />
+                        <SelectSetDropdown/>
+                    </div>
+                    <div className="Search-form-tags">
+                        <div className="Search-form-type">
+                            <p>Card Type</p>
+                            <div className="Search-form-type-cards">
+                                <a href="javascript:void(0);" className="checkbtnAll checked checkBtn">ALL</a>
+                                {cardType.map((value, index) => {
+                                    return(
+                                        <>
+                                            <input type="checkbox" name="type[]" id={`type_${value}`} 
+                                            value={value} checked={checkType[value]} onChange={handleTypeChange}/>
+                                            <label className={`checkBtn isType_${value}`} for={`type_${value}`}>{value}</label>
+                                        </>
+                                    )
+                                    
+                                })}
+                            </div>
+                        </div>
+                        <div className="Search-form-color">
+                            <p>Card Color</p>
+                            <div className="Search-form-type-cards">
+                                <a href="javascript:void(0);" className="checkbtnAll checked checkBtn">ALL</a>
+                                {cardColor.map((value, index) => {
+                                    return(
+                                        <>
+                                            <input type="checkbox" name="color[]" id={`color_${value}`} 
+                                            value={value} checked={checkColor[value]} onChange={handleColorChange}/>
+                                            <label className={`checkBtn isColor_${value}`} for={`color_${value}`}>{value}</label>
+                                        </>
+                                    )
+                                    
+                                })}
+                            </div>
+                        </div>
+                        <div className="Search-form-rarity">
+                            <p>Card Rarity</p>
+                            <div className="Search-form-type-cards">
+                                <a href="javascript:void(0);" className="checkbtnAll checked checkBtn">ALL</a>
+                                {cardRarity.map((value, index) => {
+                                    return(
+                                        <>
+                                            <input type="checkbox" name="rarity[]" id={`rarity_${value}`} 
+                                            value={value} checked={checkRarity[value]} onChange={handleRarityChange}/>
+                                            <label className={`checkBtn isRarity_${value}`} for={`rarity_${value}`}>{value}</label>
+                                        </>
+                                    )
+                                    
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" className="Search-form-submit" onClick={fetchCardsCondition}>Search</button>
+                </form>
+            </div>
+            
+            <ul>
+                {selectCard?.map( (item) => (
+                    <li key={item.name}>{item.name} {item.deck}</li>
+                ))}
+            </ul>
 
-            <form className="contactForm">
-                <label>Email</label>
-                <input type="text" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-
-                <label>Name</label>
-                <textarea id="name" name="name" value={name} onChange={(e) => setName(e.target.value)}></textarea>
-                
-                {error}
-                
-                <label>Which card do you want?</label>
-                <SelectDropdown />
-
-                <button type="submit" onClick={handleSubmit}>Submit</button>
-            </form>
 
             <ul className="search-card">
                 <li>
@@ -116,3 +210,18 @@ function Search() {
 }
 
 export default Search
+
+// <button onClick='' className="Search-form-number">Sort by card number</button>
+
+/*
+{cardType.map((value, index) => {
+                                    return(
+                                        <>
+                                            <input type="checkbox" name="type[]" id={`type_${value}`} 
+                                            value={value} checked={checkType[index]} onChange={() => handleTypeChange(index, value)}/>
+                                            <label className={`checkBtn isType_${value}`} for={`type_${value}`}>{value}</label>
+                                        </>
+                                    )
+                                    
+                                })}
+                            */

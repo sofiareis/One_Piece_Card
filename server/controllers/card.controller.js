@@ -1,6 +1,5 @@
 const db = require("../models/schemas")
 const Card = db.Card
-const User = db.User
 
 // Create and Save a new card
 exports.create = async(req, res) => {
@@ -12,20 +11,21 @@ exports.create = async(req, res) => {
   // Create a card
   const newCard = new Card({
     name: req.body.name,
-    deck: req.body.desk,
+    deck: req.body.deck,
     type: req.body.type,
+    color: req.body.color,
     rarity: req.body.rarity
   });
 
   // Save card in the database
-  const saveCard = await newUser.save()
+  const saveCard = await newCard.save()
   if (saveCard) {
     console.log(newCard)
-    res.send('User saved. Thank you.')
+    res.send('Card saved. Thank you.')
     } else {
         res.status(500).send({
         message:
-            err.message || "Some error occurred while creating the user."})
+            err.message || "Some error occurred while creating the card."})
 }
 
 };
@@ -44,14 +44,43 @@ exports.findAll = async(req, res) => {
       });
 };
 
-// Retrieve all cards from the database.
-exports.findAllDeck = async(req, res) => {
-    const deck = req.query.deck;
-    var condition = deck ? { deck: { $regex: new RegExp(title), $options: "i" } } : {};
-  
+
+exports.findDeck = async(req, res) => {
+  console.log(req.query)
+  const deck = req.query.deck;
+  if (!deck) {
+    res.status(400).json({ message: "Content can not be empty!", error: "Deck missing" });
+    return;
+  }
+
+  await Card.find({"deck" : deck})
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving cards."
+      });
+    });
+};
+
+
+// Retrieve all cards from the database based on condition.
+exports.findCard = async(req, res) => {
+    console.log(req.query)
+    const { deck, type, rarity, color } = req.query;
+    console.log(deck)
+    var condition = {
+      deck: deck ? deck : ["OP01", "OP02", "OP03", "OP04", "OP05"],
+      type: type ? { "$in" : type } : ["Leader", "Character", "Stage", "Event"],
+      rarity: rarity ? { "$in" : rarity } : ["Common", "Uncommon", "Rare", "Super Rare", "Secret Rare", "Leader"],
+      color: color ? { "$in" : color } : ["Red", "Green", "Blue", "Purple", "Black", "Yellow", "Multicolor"]
+    };
+    console.log(condition)
     await Card.find(condition)
       .then(data => {
-        res.send(data);
+        res.status(201).send(data);
       })
       .catch(err => {
         res.status(500).send({
