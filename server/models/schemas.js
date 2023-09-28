@@ -10,34 +10,17 @@ const cardSchema = new Schema({
 }, { collection : 'card'})
 const Card = mongoose.model('Card', cardSchema, 'card')
 
-const cardCollectionSchema = new Schema({
-    cards: [{card: cardSchema, quantity: {type:String}}]
-})
-const CardCollection = mongoose.model('CardCollection', cardCollectionSchema, 'cardCollection')
-
-const missingSchema = new Schema({
-    cards: [cardSchema]
-})
-const Missing = mongoose.model('Missing', missingSchema, 'missing')
-
-
-const wishingSchema = new Schema({
-    cards: [cardSchema]
-})
-const Wishing = mongoose.model('Wishing', wishingSchema, 'wishing')
-
 const userSchema = new Schema({
     username: {type:String, required:true, unique:true},
     password: {type:String, required:true, minlength: 5},
-    cardCollection: {type: mongoose.Schema.Types.ObjectId, ref: 'CardCollection'},
-    missing: {type: mongoose.Schema.Types.ObjectId, ref: 'Missing'},
-    wishing: {type: mongoose.Schema.Types.ObjectId, ref: 'Wishing'},
+    cardCollection: [{card: {type: mongoose.Schema.Types.ObjectId, ref: 'Card'}, quantity: {type:Number, default: 0}}],
+    wishing: [{type: mongoose.Schema.Types.ObjectId, ref: 'Card'}],
     entryDate: {type:Date, default:Date.now},
     role: {type: String, default: "Basic", required: true},
 })
 const Users = mongoose.model('Users', userSchema, 'users')
 
-const mySchemas = {'Users':Users, 'Card':Card, 'CardCollection':CardCollection, 'Missing':Missing, 'Wishing':Wishing}
+const mySchemas = {'Users':Users, 'Card':Card}
 module.exports = mySchemas
 
 

@@ -3,12 +3,15 @@ import { useState, useEffect } from "react";
 import axios from "axios"
 import { deck, cardType, rarity, cardColor, cardRarity } from "../components/CardInfo";
 import './Search.css'
+import { getCurrentUser } from "../services/auth.service";
 
 function Search() {
     const [data, setData] = useState(null);
 
     const [selectCard, setSelectCard] = useState([]);
     const [error, setError] = useState('')
+
+    const [quantity, setQuantity] = useState(0);
     
     const [searchCard, setSearchCard] = useState('');
     const [checkType, setCheckType] = useState(cardType.reduce((o, key) => ({ ...o, [key]: false}), {}))
@@ -38,13 +41,10 @@ function Search() {
     const fetchCardsCondition = async(e) => {
         e.preventDefault()
 
-        let leader = false;
-
         const type = [];
         for (var key in checkType){
             if(checkType[key]){
                 type.push(key);
-                key == "Leader" ? leader = true : leader = leader;
             }
         }
 
@@ -58,15 +58,8 @@ function Search() {
         for (var key in checkRarity){
             if(checkRarity[key]){
                 rarity.push(key);
-                key == "Leader" ? leader = true : leader = leader;
             }
         }
-
-        if(leader){
-            type.push("Leader");
-            rarity.push("Leader");
-        }
-        
 
         const params = {
             params: {
@@ -85,7 +78,7 @@ function Search() {
             }
         }
         */
-        console.log(params)
+        //console.log(params)
         await axios.get('/card/condition', params)
         .then(res => {
             setSelectCard(res.data)
@@ -127,6 +120,49 @@ function Search() {
         setCheckRarity(s => ({ ...s, [target.value]: !s[target.value] }));
     };
 
+    /*
+    const handleChangeQuantity = (e) => {
+        const regex = /^[0-9\b]+$/;
+        if (e.target.value === "" || regex.test(e.target.value)) {
+            setQuantity(e.target.value);
+        }
+    }
+    */
+
+    const addCardToCollection = async(e) => {
+        e.preventDefault()
+        const params = {
+            params: {
+                card: e.target.getAttribute('card'), 
+                quantity: 1
+            }
+        };
+        console.log(params)
+        console.log(e.target.getAttribute('card'))
+        await axios.put(`/userUpdateCollection/${getCurrentUser()._id}`, params)
+        .then(res => {
+            console.log(res.data)
+        })
+        .catch(err => console.log(err))
+    }
+
+    const addCardToWishlist = async(e) => {
+        e.preventDefault()
+        const params = {
+            params: {
+                card: e.target.getAttribute('card'), 
+                quantity: 1
+            }
+        };
+        console.log(params)
+        console.log((e.target.getAttribute('card')))
+        await axios.put(`/userUpdateWishlist/${getCurrentUser()._id}`, params)
+        .then(res => {
+            console.log(res.data)
+        })
+        .catch(err => console.log(err))
+    }
+
     
     //NEEDS ERROR HANDLING?
     const logout = async() => {
@@ -155,7 +191,7 @@ function Search() {
                                         <>
                                             <input type="checkbox" name="type[]" id={`type_${value}`} 
                                             value={value} checked={checkType[value]} onChange={handleTypeChange}/>
-                                            <label className={`checkBtn isType_${value}`} for={`type_${value}`}>{value}</label>
+                                            <label className={`checkBtn isType_${value}`} htmlFor={`type_${value}`}>{value}</label>
                                         </>
                                     )
                                     
@@ -170,7 +206,7 @@ function Search() {
                                         <>
                                             <input type="checkbox" name="color[]" id={`color_${value}`} 
                                             value={value} checked={checkColor[value]} onChange={handleColorChange}/>
-                                            <label className={`checkBtn isColor_${value}`} for={`color_${value}`}>{value}</label>
+                                            <label className={`checkBtn isColor_${value}`} htmlFor={`color_${value}`}>{value}</label>
                                         </>
                                     )
                                     
@@ -185,7 +221,7 @@ function Search() {
                                         <>
                                             <input type="checkbox" name="rarity[]" id={`rarity_${value}`} 
                                             value={value} checked={checkRarity[value]} onChange={handleRarityChange}/>
-                                            <label className={`checkBtn isRarity_${value}`} for={`rarity_${value}`}>{value}</label>
+                                            <label className={`checkBtn isRarity_${value}`} htmlFor={`rarity_${value}`}>{value}</label>
                                         </>
                                     )
                                     
@@ -198,25 +234,18 @@ function Search() {
                     </div>
                 </form>
             </div>
-            <ul>
+            <div className="Search-card-result">
                 {selectCard?.map( (item) => (
                     <div className="Search-card">
-                        <li key={item.name} className="Search-card-name">{item.name}</li>
-                        <li key={item.deck} className="Search-card-name">{item.deck}</li>
-                        <li key={item.type} className="Search-card-name">{item.type}</li>
-                        <li key={item.color} className="Search-card-name">{item.color}</li>
-                        <li key={item.rarity} className="Search-card-name">{item.rarity}</li>
+                        <a href="/card/001" className="card"><img className="card-img" src={require('../assets/images/OP01-001.png')} alt="OP01-001" /> </a>
+                        <p className="Search-card-name">{item.name}</p>
+                        <div className="Search-card-form">
+                            <button type="submit" className="Search-card-button" card={item._id} onClick={addCardToCollection}>Collection</button>
+                            <button type="submit" className="Search-card-button" card={item._id} onClick={addCardToWishlist}>Wishlist</button>
+                        </div>
                     </div>
                 ))}
-            </ul>
-
-
-            <ul className="search-card">
-                <li>
-                    <a href="/card/001" className="card"><img className="card-img" src={require('../assets/images/OP01-001.png')} alt="OP01-001" /> </a>
-                </li>
-            </ul>
-
+            </div>
             <button className="logout" onClick={logout}><a href="/">Log Out</a></button>
         </div>
     )

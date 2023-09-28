@@ -13,6 +13,7 @@ router.get("/api", (req, res) => {
 // Create a new user
 router.post("/user", user.create);
 
+// Login a user
 router.post('/login', user.login);
 
 // Retrieve all user
@@ -21,8 +22,23 @@ router.get("/user", adminAuth, user.findAll);
 // Retrieve a single user with id
 router.get("/user/:id", adminAuth, user.findOne);
 
+// Retrieve a users collection with id
+router.get("/collection/:id", userAuth, user.getCollection);
+
+// Retrieve a users wishlist with id
+router.get("/wishlist/:id", userAuth, user.getWishlist);
+
+// Retrieve a users missing cards with id
+router.get("/missing/:id", userAuth, user.getMissing);
+
+
+
 // Update a user with id
 router.put("/user/:id", adminAuth, user.update);
+
+router.put("/userUpdateCollection/:id", userAuth, user.updateCollection);
+
+router.put("/userUpdateWishlist/:id",userAuth, user.updateWishlist);
 
 // Delete a user with id
 router.delete("/user/:id", adminAuth, user.delete);

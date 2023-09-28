@@ -4,6 +4,8 @@ import Collection from "../pages/Collection";
 import Landing from "../pages/Landing";
 import Header from "./Header";
 import Card from '../pages/Card';
+import Missing from '../pages/Missing';
+import Wishlist from '../pages/Wishlist';
 
 function Router() {
     const Layout = () => {
@@ -42,6 +44,14 @@ function Router() {
                 {
                     path: "/collection",
                     element: <Collection />
+                },
+                {
+                    path: "/missing",
+                    element: <Missing />
+                },
+                {
+                    path: "/wishlist",
+                    element: <Wishlist />
                 },
                 {
                     path: "/card",

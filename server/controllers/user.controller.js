@@ -3,6 +3,7 @@ require('dotenv').config();
 const bcrypt = require("bcryptjs")
 const jwt = require('jsonwebtoken')
 const User = db.Users
+const Card = db.Card
 
 // Create and Save a new user
 exports.create = async(req, res) => {
@@ -130,7 +131,6 @@ exports.findAll = async(req, res) => {
 // Find a single user with an id
 exports.findOne = async(req, res) => {
     const _id = req.params.id;
-
     await User.findById(_id)
       .then(data => {
         if (!data)
@@ -163,15 +163,16 @@ exports.findOneUsername = async(req, res) => {
 
 // Update a user by the id in the request
 exports.update = async(req, res) => {
-    if (!req.body || !req.params.id) {
+    if (!req.query || !req.params.id) {
         return res.status(400).json({
           message: "Data to update can not be empty!"
         });
       }
-    
+  
+      console.log(req.query)
       const id = req.params.id;
     
-    await User.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+    await User.findByIdAndUpdate(id, req.query, { useFindAndModify: false })
         .then(data => {
           if (!data) {
             res.status(404).json({
@@ -184,6 +185,220 @@ exports.update = async(req, res) => {
             message: "Error updating user with id=" + id
           });
         });
+};
+
+exports.getCollection = async(req, res) => {
+  if (!req.params.id) {
+    return res.status(400).json({
+      message: "Need user id"
+    });
+  }
+  const id = req.params.id
+  console.log(id)
+  await db.Users.
+    findOne({ _id: id }).
+    populate('cardCollection.card').
+    exec().then(data => {
+      console.log(data)
+      if (!data) {
+        res.status(404).json({
+          message: `Cannot get user collection with id=${id}. Maybe user was not found!`
+        });
+      } else res.status(201).json({ message: "User collection was updated successfully.", card: data.cardCollection });
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: err.message
+      });
+    });
+}
+
+exports.getWishlist = async(req, res) => {
+  if (!req.params.id) {
+    return res.status(400).json({
+      message: "Need user id"
+    });
+  }
+  const id = req.params.id
+  console.log(id)
+  await db.Users.
+    findOne({ _id: id }).
+    populate('wishing').
+    exec().then(data => {
+      console.log(data)
+      if (!data) {
+        res.status(404).json({
+          message: `Cannot get user collection with id=${id}. Maybe user was not found!`
+        });
+      } else res.status(201).json({ message: "User collection was updated successfully.", card: data.wishing });
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: err.message
+      });
+    });
+}
+
+exports.getMissing = async(req, res) => {
+  if (!req.params.id) {
+    return res.status(400).json({
+      message: "Need user id"
+    });
+  }
+  const id = req.params.id
+  let missing = []
+
+  try{
+    let dbData = await Card.find({});
+    for(let i = 0; i < dbData.length; i++){
+        let card = await db.Users.findOne({_id : id, "cardCollection.card" : dbData[i]._id })
+        if(!card){
+          missing.push(dbData[i]);
+        }
+      }
+      res.status(201).send({message: "Got user missing cards", card: missing})
+  } catch(err) {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retrieving cards."
+    });
+  };
+}
+
+// Update a user by the id in the request
+exports.updateCollection = async(req, res) => {
+  if (!req.body.params || !req.params.id) {
+      return res.status(400).json({
+        message: "Data to update can not be empty!"
+      });
+    }
+  const id = req.params.id
+  console.log(req.body.params.card)
+  
+  try{
+    let user = await User.findOne({_id : id})
+    if(!user) {
+      res.status(401).json({message: "Couldnt find user", error: "User not found"})
+    } else {
+      //if no array in collection create one and put the card
+      if(!user.cardCollection){
+        await User.findByIdAndUpdate(
+          id, {cardCollection : [{card: req.body.params.card, quantity: req.body.params.quantity }]}, { useFindAndModify: false }
+        ).then(data => {
+          if (!data) {
+            res.status(404).json({
+              message: `Cannot update user with id=${id}. Maybe user was not found!`
+            });
+          } else res.status(201).json({ message: "User collection was updated successfully." });
+        })
+        .catch(err => {
+          res.status(500).json({
+            message: err.message
+          });
+        });
+      } else{
+          let card = await db.Users.findOne({_id : id, "cardCollection.card" : req.body.params.card })
+          //that card doesnt exist, so push one
+          if(!card){
+            console.log("UHUIH")
+            await User.updateOne(
+              {_id : id },
+              {$push : {cardCollection : {card: req.body.params.card, quantity: req.body.params.quantity}}}
+            ).then(data => {
+              if (!data) {
+                res.status(404).json({
+                  message: `Cannot update user with id=${id}. Maybe user was not found!`
+                });
+              } else res.status(201).json({ message: "User collection was updated successfully." });
+            })
+            .catch(err => {
+              res.status(500).json({
+                message: err.message
+              });
+            });
+          } else {
+            //that card doesnt exist, so increase quantity
+            await User.updateOne(
+              {_id : id, "cardCollection.card" : req.body.params.card },
+              { $inc : {'cardCollection.$.quantity': req.body.params.quantity}},
+            ).then(data => {
+              if (!data) {
+                res.status(404).json({
+                  message: `Cannot update user with id=${id}. Maybe user was not found!`
+                });
+              } else res.status(201).json({ message: "User collection was updated successfully." });
+            })
+            .catch(err => {
+              res.status(500).json({
+                message: err.message
+              });
+            });
+          }
+      }
+    }
+  } catch (error){
+    console.log(error)
+  }
+};
+
+// Update a user by the id in the request
+exports.updateWishlist = async(req, res) => {
+  if (!req.body.params || !req.params.id) {
+      return res.status(400).json({
+        message: "Data to update can not be empty!"
+      });
+    }
+
+  console.log(req.body.params.card)
+  const id = req.params.id
+  try{
+    let user = await User.findOne({_id : id})
+    if(!user) {
+      res.status(401).json({message: "Couldnt find user", error: "User not found"})
+    } else {
+      //if no array in wishlist create one and put the card
+      if(!user.wishing){
+        await User.findByIdAndUpdate(
+          id, {wishing : [req.body.params.card]}, { useFindAndModify: false }
+        ).then(data => {
+          if (!data) {
+            console.log(data)
+            res.status(404).json({
+              message: `Cannot update user with id=${id}. Maybe user was not found!`
+            });
+          } else res.status(201).json({ message: "User wishlist was updated successfully." });
+        })
+        .catch(err => {
+          res.status(500).json({
+            message: err.message
+          });
+        });
+      } else{
+        let card = await db.Users.findOne({_id : id, "wishing" : req.body.params.card })
+        //that card doesnt exist, so push one
+        if(!card){
+          console.log("UHUIH")
+          await User.updateOne(
+            {_id : id },
+            {$push : {wishing : req.body.params.card}}
+          ).then(data => {
+            if (!data) {
+              res.status(404).json({
+                message: `Cannot update user with id=${id}. Maybe user was not found!`
+              });
+            } else res.status(201).json({ message: "User collection was updated successfully." });
+          })
+          .catch(err => {
+            res.status(500).json({
+              message: err.message
+            });
+          });
+        }
+    }
+  }
+} catch (error){
+  console.log(error)
+}
 };
 
 // Delete a user with the specified id in the request
