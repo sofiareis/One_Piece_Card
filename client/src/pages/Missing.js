@@ -29,7 +29,7 @@ function Missing() {
     
     return(
         <div>
-            <p>This will be the collection page yipe</p>
+            <p>This will be the missing page yipe</p>
             <p>{user.username}</p>
             <p>{!data ? "Loading..." : 
                 <ul>

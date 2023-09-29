@@ -2,6 +2,8 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios"
 import { getCurrentUser } from "../services/auth.service";
+import './Collection.css'
+import CardCollection from "../components/CardCollection"
 
 function Collection() {
     const [data, setData] = useState([]);
@@ -29,15 +31,32 @@ function Collection() {
     }
     
     return(
-        <div>
+        <div className="Collection">
             <p>This will be the collection page yipe</p>
             <p>{user.username}</p>
             <p>{!data ? "Loading..." : 
-                <ul>
-                    {data?.map( (item) => (
-                        <li key={item.card.name}>{item.card.name} {item.card.deck}</li>
-                    ))}
-                </ul>
+                <ul className="Collection-card-result">
+                <div className="Collection-card">
+                        <li key='title-name' className="Collection-card-title">Card</li>
+                        <li key='title-name' className="Collection-card-title">Name</li>
+                        <li key='title-deck' className="Collection-card-title">Deck</li>
+                        <li key='title-type' className="Collection-card-title">Type</li>
+                        <li key='title-color' className="Collection-card-title">Color</li>
+                        <li key='title-rarity' className="Collection-card-title">Rarity</li>
+                    </div>
+                {data?.map( (item) => (
+                    <div className="Collection-card">
+                        <a href="/card/001" className="card"><img className="Collection-card-img" src={require('../assets/images/OP01-001.png')} alt="OP01-001" /> </a>
+                        <li key={item.card.name} className="Collection-card-name">{item.card.name}</li>
+                        <li key={item.card.deck} className="Collection-card-name">{item.card.deck}</li>
+                        <li key={item.card.type} className="Collection-card-name">{item.card.type}</li>
+                        <li key={item.card.color} className="Collection-card-name">{item.card.color}</li>
+                        <li key={item.card.rarity} className="Collection-card-name">{item.card.rarity}</li>
+                        <li key={`collection_${item.card.name}`} className="Collection-card-name">{item.quantity}</li>
+                        <li key={`delete${item.card.name}`} className="Collection-card-name">Delete</li>
+                    </div>
+                ))}
+            </ul>
             }</p>
         </div>
     )
@@ -46,23 +65,23 @@ function Collection() {
 export default Collection
 
 /*
-<ul className="Search-card-result">
-                <div className="Search-card">
-                        <li key='title-name' className="Search-card-title">Name</li>
-                        <li key='title-deck' className="Search-card-title">Deck</li>
-                        <li key='title-type' className="Search-card-title">Type</li>
-                        <li key='title-color' className="Search-card-title">Color</li>
-                        <li key='title-rarity' className="Search-card-title">Rarity</li>
+<ul className="Collection-card-result">
+                <div className="Collection-card">
+                        <li key='title-name' className="Collection-card-title">Name</li>
+                        <li key='title-deck' className="Collection-card-title">Deck</li>
+                        <li key='title-type' className="Collection-card-title">Type</li>
+                        <li key='title-color' className="Collection-card-title">Color</li>
+                        <li key='title-rarity' className="Collection-card-title">Rarity</li>
                     </div>
-                {selectCard?.map( (item) => (
-                    <div className="Search-card">
-                        <li key={item.name} className="Search-card-name">{item.name}</li>
-                        <li key={item.deck} className="Search-card-name">{item.deck}</li>
-                        <li key={item.type} className="Search-card-name">{item.type}</li>
-                        <li key={item.color} className="Search-card-name">{item.color}</li>
-                        <li key={item.rarity} className="Search-card-name">{item.rarity}</li>
-                        <li key={`collection_${item.name}`} className="Search-card-name">Collection</li>
-                        <li key={`wishlist${item.name}`} className="Search-card-name">Wishlist</li>
+                {selectCard?.map( (item.card) => (
+                    <div className="Collection-card">
+                        <li key={item.card.name} className="Collection-card-name">{item.card.name}</li>
+                        <li key={item.card.deck} className="Collection-card-name">{item.card.deck}</li>
+                        <li key={item.card.type} className="Collection-card-name">{item.card.type}</li>
+                        <li key={item.card.color} className="Collection-card-name">{item.card.color}</li>
+                        <li key={item.card.rarity} className="Collection-card-name">{item.card.rarity}</li>
+                        <li key={`collection_${item.card.name}`} className="Collection-card-name">Collection</li>
+                        <li key={`wishlist${item.card.name}`} className="Collection-card-name">Wishlist</li>
                     </div>
                 ))}
             </ul>

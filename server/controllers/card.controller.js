@@ -68,15 +68,16 @@ exports.findDeck = async(req, res) => {
 
 // Retrieve all cards from the database based on condition.
 exports.findCard = async(req, res) => {
-    //console.log(req.query)
-    const { deck, type, rarity, color } = req.query;
-    //console.log(deck)
-    var condition = {
-      deck: deck ? deck : ["OP01", "OP02", "OP03", "OP04", "OP05"],
-      type: type ? { "$in" : type } : ["Leader", "Character", "Stage", "Event"],
-      rarity: rarity ? { "$in" : rarity } : ["Common", "Uncommon", "Rare", "Super Rare", "Secret Rare", "Leader"],
-      color: color ? { "$in" : color } : ["Red", "Green", "Blue", "Purple", "Black", "Yellow", "Multicolor"]
-    };
+    const { deck, type, rarity, color, name } = req.query;
+    console.log(name)
+      var condition = {
+        name: {$regex: name},
+        deck: deck ? deck : ["OP01", "OP02", "OP03", "OP04", "OP05"],
+        type: type ? { "$in" : type } : ["Leader", "Character", "Stage", "Event"],
+        rarity: rarity ? { "$in" : rarity } : ["Common", "Uncommon", "Rare", "Super Rare", "Secret Rare", "Leader"],
+        color: color ? { "$in" : color } : ["Red", "Green", "Blue", "Purple", "Black", "Yellow", "Multicolor"]
+      };
+   
     //console.log(condition)
     await Card.find(condition)
       .then(data => {

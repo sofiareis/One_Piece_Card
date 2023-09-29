@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios"
-import { deck, cardType, rarity, cardColor, cardRarity } from "../components/CardInfo";
+import { deck, cardType, cardColor, cardRarity } from "../components/CardInfo";
 import './Search.css'
 import { getCurrentUser } from "../services/auth.service";
 
@@ -37,7 +37,6 @@ function Search() {
         .catch(err => console.log(err))
     }
 
-    //NEED TO FIX LEADER ERROR
     const fetchCardsCondition = async(e) => {
         e.preventDefault()
 
@@ -63,6 +62,7 @@ function Search() {
 
         const params = {
             params: {
+                name: searchCard,
                 deck: selectSet,
                 type: type,
                 rarity: rarity,
@@ -163,16 +163,6 @@ function Search() {
         .catch(err => console.log(err))
     }
 
-    
-    //NEEDS ERROR HANDLING?
-    const logout = async() => {
-        localStorage.removeItem("user");
-        return await axios.get('/logout')
-            .then(res => {return res.data})
-    }
-
-    
-
     return(
         <div className="Search">
             <p className="Search-title">Search for cards</p>
@@ -246,7 +236,6 @@ function Search() {
                     </div>
                 ))}
             </div>
-            <button className="logout" onClick={logout}><a href="/">Log Out</a></button>
         </div>
     )
 }

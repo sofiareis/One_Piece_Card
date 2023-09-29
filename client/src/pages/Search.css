@@ -5,8 +5,9 @@
 
 .Search-title{
     margin-left: 30px;
-    margin-bottom: 0px;
+    margin-bottom: 10px;
     font-size: 40px;
+    margin-top: 90px;
 }
 .Search-search{
     display: block;
@@ -84,7 +85,7 @@
 
 .Search-form-type-cards .checkBtn{
     width: 100px;
-    font-size: 15px;
+    font-size: 17px;
     margin: 0px;
     padding: 0;
     cursor: pointer;
@@ -94,7 +95,7 @@
     border: solid 2px #000;
     margin-left: 5px;
     margin-right: 5px;
-    background-color: #EDDFBC;
+    background-color: #ece5d0;
 }
 
 .checkBtn:hover {
@@ -102,9 +103,9 @@
     color: #fff;
 }
 
-input:checked+label {
-    background: #000;
-    color: #fff;
+input:checked + .checkBtn {
+    background-color: #000;
+    color: white;
 }
 
 .Search-form-type-cards input{
@@ -131,6 +132,7 @@ input:checked+label {
     align-content: center;
     color: white;
     background-color: rgba(44, 43, 91, 0.74);
+    cursor: pointer;
 }
 
 .Search-card{
@@ -148,8 +150,7 @@ input:checked+label {
 
 .Search-card{
     display: grid;
-    column-gap: 10px;
-    grid-template-columns: 16rem;
+    grid-template-columns: 14rem;
     justify-items: center;
 }
 
@@ -171,7 +172,24 @@ input:checked+label {
 
 .Search-card img{
     max-width: 200px;
-    max-height: 250px;
+    max-height: 280px;
     margin-top: 10px;
 
+}
+
+.Search-card-button{
+    border-radius: 9px;
+    border: rgba(44, 43, 91, 0.74);
+    text-align: center;
+    width: 90px;
+    height: 30px;
+    color: white;
+    background-color: #3F3F69;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.Search-card-button:hover{
+    background-color: #77778e;
+    cursor: pointer;
 }
