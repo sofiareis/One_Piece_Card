@@ -1,43 +1,80 @@
 .Collection{
     font-size: 20px;
+    margin: 40px;
+}
+
+.Collection-title{
+    margin-left: 30px;
+    margin-bottom: 10px;
+    font-size: 40px;
+    margin-top: 90px;
 }
 
 .Collection-card-result{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex-wrap: wrap;
+    align-items: center;
     justify-content: center;
     padding: 0px;
-    margin-left: 90px;
 }
 
 .Collection-card{
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 14rem;
+    justify-items: center;
 }
 
 .Collection-card-form{
-   display: flex;
-   flex-direction: column;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
-
-.Collection-card-title{
-    margin: 5px 10px;
- }
 
 .Collection-card-name{
-    margin: 5px 10px;
+    margin: 5px 0px;
+    text-align: center;
  }
 
-.Collection-card li{
-    list-style-type: none;
-    padding: 10px 0px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.Collection-card img{
+    max-width: 200px;
+    max-height: 280px;
+    margin-top: 10px;
+
 }
 
-.Collection-card-img{
-    max-width: 120;
-    max-height: 167px;
+.Collection-input{
+    max-width: 18px;
+    margin: 0px 5px;
+    text-align: center;
+    border-color: rgba(44, 43, 91, 0.74);
+}
+
+.Collection-delete{
+    margin: 5px 0px;
+    border-radius: 0px;
+    border-color: transparent;
+    background-color: transparent;
+    color: rgb(110, 129, 173);
+    cursor: pointer;
+
+}
+
+.Collection-card-button{
+    border-radius: 9px;
+    border: rgba(44, 43, 91, 0.74);
+    text-align: center;
+    width: 70px;
+    height: 30px;
+    color: white;
+    background-color: #3F3F69;
+    margin-left: 5px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.Collection-card-button:hover{
+    background-color: #77778e;
+    cursor: pointer;
 }

@@ -6,13 +6,7 @@ import './Search.css'
 import { getCurrentUser } from "../services/auth.service";
 
 function Search() {
-    const [data, setData] = useState(null);
-
     const [selectCard, setSelectCard] = useState([]);
-    const [error, setError] = useState('')
-
-    const [quantity, setQuantity] = useState(0);
-    
     const [searchCard, setSearchCard] = useState('');
     const [checkType, setCheckType] = useState(cardType.reduce((o, key) => ({ ...o, [key]: false}), {}))
     const [checkColor, setCheckColor] = useState(cardColor.reduce((o, key) => ({ ...o, [key]: false}), {}))
@@ -69,16 +63,7 @@ function Search() {
                 color: color,
             }
         }
-        /*
-        const params = {
-            params: {
-                deck: selectSet,
-                type:  { "$in" : cardType },
-                //type:  { "$in" : },
-            }
-        }
-        */
-        //console.log(params)
+
         await axios.get('/card/condition', params)
         .then(res => {
             setSelectCard(res.data)
@@ -119,15 +104,6 @@ function Search() {
         
         setCheckRarity(s => ({ ...s, [target.value]: !s[target.value] }));
     };
-
-    /*
-    const handleChangeQuantity = (e) => {
-        const regex = /^[0-9\b]+$/;
-        if (e.target.value === "" || regex.test(e.target.value)) {
-            setQuantity(e.target.value);
-        }
-    }
-    */
 
     const addCardToCollection = async(e) => {
         e.preventDefault()

@@ -25,6 +25,9 @@ router.get("/user/:id", adminAuth, user.findOne);
 // Retrieve a users collection with id
 router.get("/collection/:id", userAuth, user.getCollection);
 
+// Retrieve a users collection with id
+router.get("/collectionCondition/:id", userAuth, user.getCollectionCondition);
+
 // Retrieve a users wishlist with id
 router.get("/wishlist/:id", userAuth, user.getWishlist);
 
@@ -36,7 +39,9 @@ router.get("/missing/:id", userAuth, user.getMissing);
 // Update a user with id
 router.put("/user/:id", adminAuth, user.update);
 
-router.put("/userUpdateCollection/:id", userAuth, user.updateCollection);
+router.put("/userUpdateCollection/:id", userAuth, user.updateCardCollection);
+
+router.put("/userUpdateCardQuantity/:id", userAuth, user.updateCardCollectionQuantity);
 
 router.put("/userUpdateWishlist/:id",userAuth, user.updateWishlist);
 

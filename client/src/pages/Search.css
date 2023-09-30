@@ -65,18 +65,6 @@
    align-items:flex-start;
 }
 
-.Search-form-type{
-   
-}
-
-.Search-form-color{
-   
- }
-
- .Search-form-rarity{
-
- }
-
 .Search-form-type-cards{
     display: flex;
     flex-wrap: wrap;
@@ -133,10 +121,6 @@ input:checked + .checkBtn {
     color: white;
     background-color: rgba(44, 43, 91, 0.74);
     cursor: pointer;
-}
-
-.Search-card{
-    
 }
 
 .Search-card-result{
