@@ -2,15 +2,13 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios"
 import { deck } from "../components/CardInfo";
-import { getCurrentUser } from "../services/auth.service";
 import './Collection.css'
 import CardCollection from "../components/CardCollection"
 
 function Collection() {
     const [data, setData] = useState([]);
-    //const [searchCard, setSearchCard] = useState('');
-    //const [selectSet, setSelectSet] = useState('')
-    const user = getCurrentUser();
+    const [searchCard, setSearchCard] = useState('');
+    const [selectSet, setSelectSet] = useState('')
     useEffect(() => {
         let processing = true
         fetchUserCards(processing)
@@ -21,9 +19,10 @@ function Collection() {
 
 
     const fetchUserCards = async(processing) => {
-        await axios.get(`/collection/${user._id}`)
+        await axios.get('/collection')
         .then(res => {
             if (processing) {
+                console.log(res.data.card)
                 setData(res.data.card)
             }
         })
@@ -31,8 +30,6 @@ function Collection() {
     }
 
     //do we need filter? yea...
-    //need to see how to do it with prisma
-    /*
     const fetchCardsCondition = async(e) => {
         e.preventDefault()
 
@@ -43,7 +40,7 @@ function Collection() {
             }
         }
 
-        await axios.get(`/collectionCondition/${user._id}`, params)
+        await axios.get('/collection/condition', params)
         .then(res => {
             setData(res.data)
         })
@@ -66,18 +63,17 @@ function Collection() {
             </select>
         )
     }
-    */
     
     return(
         <div className="Collection">
-            <p className="Collection-title">{user.username}'s Collection</p>
-            <p>{!data ? "Loading..." : 
+            <p className="Collection-title">Your Collection</p>
+            <div>{!data ? "Loading..." : 
                 <div className="Collection-card-result">
                 {data?.map( (item) => (
                         <CardCollection card={item}/>
                 ))}
                 </div>
-            }</p>
+            }</div>
         </div>
     )
 }

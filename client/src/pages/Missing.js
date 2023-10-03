@@ -1,14 +1,13 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios"
-import { getCurrentUser } from "../services/auth.service";
+import './Collection.css'
+import Card from "../components/Card"
 
 function Missing() {
     const [data, setData] = useState([]);
-    const user = getCurrentUser();
     useEffect(() => {
         let processing = true
-        //getcurrent(processing)
         fetchUserMissingCards(processing)
         return () => {
             processing = false
@@ -17,9 +16,8 @@ function Missing() {
 
 
     const fetchUserMissingCards = async(processing) => {
-        await axios.get(`/missing/${getCurrentUser()._id}`)
+        await axios.get('/missing')
         .then(res => {
-            console.log(res.data.missing)
             if (processing) {
                 setData(res.data.card)
             }
@@ -28,15 +26,14 @@ function Missing() {
     }
     
     return(
-        <div>
-            <p>This will be the missing page yipe</p>
-            <p>{user.username}</p>
+        <div className="Collection">
+            <p className="Collection-title">Your Missing Cards</p>
             <p>{!data ? "Loading..." : 
-                <ul>
-                    {data?.map( (item) => (
-                        <li key={item.name}>{item.name} {item.deck}</li>
-                    ))}
-                </ul>
+                <div className="Collection-card-result">
+                {data?.map( (item) => (
+                        <Card card={item}/>
+                ))}
+                </div>
             }</p>
         </div>
     )

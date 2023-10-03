@@ -2,11 +2,11 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios"
 import { deck, cardType, cardColor, cardRarity } from "../components/CardInfo";
-import './Search.css'
+import './Filter.css'
 
-function Search() {
+function Filter({location}) {
     const [selectCard, setSelectCard] = useState([]);
-    const [searchCard, setSearchCard] = useState('');
+    const [FilterCard, setFilterCard] = useState('');
     const [checkType, setCheckType] = useState(cardType.reduce((o, key) => ({ ...o, [key]: false}), {}))
     const [checkColor, setCheckColor] = useState(cardColor.reduce((o, key) => ({ ...o, [key]: false}), {}))
     const [checkRarity, setCheckRarity] = useState(cardRarity.reduce((o, key) => ({ ...o, [key]: false}), {}))
@@ -21,7 +21,20 @@ function Search() {
     }, []);
 
     const fetchCards = async(processing) => {
-        await axios.get('/card')
+        let api = ''
+        if(location = 'search'){
+            api = '/card'
+        }
+        if(location = 'collection'){
+            api = '/collection'
+        }
+        if(location = 'missing'){
+            api = '/missing'
+        }
+        if(location = 'wishlist'){
+            api = '/wishlist'
+        }
+        await axios.get(api)
         .then(res => {
             if (processing) {
                 setSelectCard(res.data.card)
@@ -55,13 +68,28 @@ function Search() {
 
         const params = {
             params: {
-                name: searchCard,
+                name: FilterCard,
                 deck: selectSet,
                 type: type,
                 rarity: rarity,
                 color: color,
             }
         }
+
+        let api = ''
+        if(location = 'search'){
+            api = '/card'
+        }
+        if(location = 'collection'){
+            api = '/collection'
+        }
+        if(location = 'missing'){
+            api = '/missing'
+        }
+        if(location = 'wishlist'){
+            api = '/wishlist'
+        }
+        //await axios.get(api)
 
         await axios.get('/card/condition', params)
         .then(res => {
@@ -72,7 +100,7 @@ function Search() {
 
     const SelectSetDropdown = () => {
         return (
-            <select className="Search-form-dropdown" value={selectSet} onChange={(e) => {
+            <select className="Filter-form-dropdown" value={selectSet} onChange={(e) => {
                 setSelectSet(e.target.value)
                 }}>
                 <option value="" key="none"> Choose Set </option>
@@ -84,7 +112,6 @@ function Search() {
             </select>
         )
     }
-
 
     const handleTypeChange = ({target}) => {
         console.log(checkType)
@@ -104,53 +131,19 @@ function Search() {
         setCheckRarity(s => ({ ...s, [target.value]: !s[target.value] }));
     };
 
-    const addCardToCollection = async(e) => {
-        e.preventDefault()
-        const params = {
-            params: {
-                card: e.target.getAttribute('card'), 
-                quantity: 1
-            }
-        };
-        console.log(params)
-        console.log(e.target.getAttribute('card'))
-        await axios.put('/userUpdateCollection', params)
-        .then(res => {
-            console.log(res.data)
-        })
-        .catch(err => console.log(err))
-    }
-
-    const addCardToWishlist = async(e) => {
-        e.preventDefault()
-        const params = {
-            params: {
-                card: e.target.getAttribute('card'), 
-                quantity: 1
-            }
-        };
-        console.log(params)
-        console.log((e.target.getAttribute('card')))
-        await axios.put('/userUpdateWishlist', params)
-        .then(res => {
-            console.log(res.data)
-        })
-        .catch(err => console.log(err))
-    }
-
     return(
-        <div className="Search">
-            <p className="Search-title">Search for cards</p>
-            <div className="Search-search">
-                <form className="Search-form">
-                    <div className="Search-form-choose">
-                        <input type="text" placeholder="Search Card..." id="searchCard" name="searchCard" value={searchCard} onChange={(e) => setSearchCard(e.target.value)} />
+        <div className="Filter">
+            <p className="Filter-title">Filter for cards</p>
+            <div className="Filter-Filter">
+                <form className="Filter-form">
+                    <div className="Filter-form-choose">
+                        <input type="text" placeholder="Filter Card..." id="FilterCard" name="FilterCard" value={FilterCard} onChange={(e) => setFilterCard(e.target.value)} />
                         <SelectSetDropdown/>
                     </div>
-                    <div className="Search-form-tags">
-                        <div className="Search-form-type">
+                    <div className="Filter-form-tags">
+                        <div className="Filter-form-type">
                             <p>Card Type</p>
-                            <div className="Search-form-type-cards">
+                            <div className="Filter-form-type-cards">
                                 {cardType.map((value, index) => {
                                     return(
                                         <>
@@ -163,9 +156,9 @@ function Search() {
                                 })}
                             </div>
                         </div>
-                        <div className="Search-form-color">
+                        <div className="Filter-form-color">
                             <p>Card Color</p>
-                            <div className="Search-form-type-cards">
+                            <div className="Filter-form-type-cards">
                                 {cardColor.map((value, index) => {
                                     return(
                                         <>
@@ -178,9 +171,9 @@ function Search() {
                                 })}
                             </div>
                         </div>
-                        <div className="Search-form-rarity">
+                        <div className="Filter-form-rarity">
                             <p>Card Rarity</p>
-                            <div className="Search-form-type-cards">
+                            <div className="Filter-form-type-cards">
                                 {cardRarity.map((value, index) => {
                                     return(
                                         <>
@@ -194,8 +187,8 @@ function Search() {
                             </div>
                         </div>
                     </div>
-                    <div className="Search-button">
-                        <button type="submit" className="Search-form-submit" onClick={fetchCardsCondition}>Search</button>
+                    <div className="Filter-button">
+                        <button type="submit" className="Filter-form-submit" onClick={fetchCardsCondition}>Filter</button>
                     </div>
                 </form>
             </div>
@@ -215,9 +208,9 @@ function Search() {
     )
 }
 
-export default Search
+export default Filter
 
-// <button onClick='' className="Search-form-number">Sort by card number</button>
+// <button onClick='' className="Filter-form-number">Sort by card number</button>
 
 /*
 {cardType.map((value, index) => {

@@ -13,10 +13,18 @@ const Card = mongoose.model('Card', cardSchema, 'card')
 const userSchema = new Schema({
     username: {type:String, required:true, unique:true},
     password: {type:String, required:true, minlength: 5},
-    cardCollection: [{card: {type: mongoose.Schema.Types.ObjectId, ref: 'Card'}, quantity: {type:Number, default: 0}}],
-    wishing: [{type: mongoose.Schema.Types.ObjectId, ref: 'Card'}],
-    entryDate: {type:Date, default:Date.now},
-    role: {type: String, default: "Basic", required: true},
+    cardCollection: [
+        {
+            card: {type: mongoose.Schema.Types.ObjectId, ref: 'Card'}, 
+            quantity: {type:Number, default: 0}
+        }
+    ],
+    wishlist: [
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Card'
+        }
+    ],
+    entryDate: {type:Date, default:Date.now}
 })
 const Users = mongoose.model('Users', userSchema, 'users')
 

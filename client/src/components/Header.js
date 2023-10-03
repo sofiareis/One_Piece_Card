@@ -11,6 +11,15 @@ function Header() {
     return null
     }
 
+    //Put an icon instead
+    if(location.pathname === '/login' || location.pathname === '/signup') {
+        return(
+            <nav className="nav-bar">
+                <a className="nav-bar-title" href="/">Home</a>
+            </nav>
+        )
+    }
+
     //NEEDS ERROR HANDLING?
     const logout = async() => {
         localStorage.removeItem("user");

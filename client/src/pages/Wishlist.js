@@ -1,14 +1,13 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios"
-import { getCurrentUser } from "../services/auth.service";
+import './Collection.css'
+import Card from "../components/Card"
 
 function Wishlist() {
     const [data, setData] = useState([]);
-    const user = getCurrentUser();
     useEffect(() => {
         let processing = true
-        //getcurrent(processing)
         fetchUserWishlist(processing)
         return () => {
             processing = false
@@ -17,9 +16,9 @@ function Wishlist() {
 
 
     const fetchUserWishlist = async(processing) => {
-        await axios.get(`/wishlist/${getCurrentUser()._id}`)
+        await axios.get('/wishlist')
         .then(res => {
-            console.log(res.data.card)
+            console.log(res.data)
             if (processing) {
                 setData(res.data.card)
             }
@@ -29,15 +28,14 @@ function Wishlist() {
     }
     
     return(
-        <div>
-            <p>This will be the wishlist page yipe</p>
-            <p>{user.username}</p>
+        <div className="Collection">
+            <p className="Collection-title">Your Wishlist</p>
             <p>{!data ? "Loading..." : 
-                <ul>
-                    {data?.map( (item) => (
-                        <li key={item.name}>{item.name} {item.deck}</li>
-                    ))}
-                </ul>
+                <div className="Collection-card-result">
+                {data?.map( (item) => (
+                        <Card card={item}/>
+                ))}
+                </div>
             }</p>
         </div>
     )

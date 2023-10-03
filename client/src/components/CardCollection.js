@@ -1,11 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios"
-import { getCurrentUser } from "../services/auth.service";
 
 function CardCollection({ card }) {
     const [quantity, setQuantity] = useState(card.quantity);
     const [error, setError] = useState('');
+
+    console.log(card);
 
     const updateCardQuantity = async(e) => {
         e.preventDefault()
@@ -19,7 +20,7 @@ function CardCollection({ card }) {
                     quantity: quantity
                 }
             };
-            await axios.put(`/userUpdateCardQuantity/${getCurrentUser()._id}`, params)
+            await axios.put('/userUpdateCollection', params)
             .then(res => {
                 console.log(res.data)
             })

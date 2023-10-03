@@ -1,0 +1,179 @@
+.Filter{
+    font-size: 20px;
+    margin: 40px;
+}
+
+.Filter-title{
+    margin-left: 30px;
+    margin-bottom: 10px;
+    font-size: 40px;
+    margin-top: 90px;
+}
+.Filter-Filter{
+    display: block;
+    padding: 30px;
+}
+
+.Filter-form{
+    background-color: rgba(178, 149, 70, 0.55);
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.Filter-form-choose{
+    display: flex;
+    justify-content: center;
+}
+
+.Filter-form-choose input{
+    display: flex;
+    width: 440px;
+    height: 60px;
+    margin: 0px;
+    border-radius: 10px;
+    border: 1px solid white;
+    background-color: white;
+    font-size: 20px;
+    font-weight: 500;
+    padding: 0px;
+    text-indent: 20px;
+}
+
+.Filter-form-dropdown{
+    width: 440px;
+    margin-left: 30px;
+    border-radius: 10px;
+    border: 1px solid white;
+    text-align: center;
+    font-size: 20px;
+    margin-left: 100px;
+}
+
+.Filter-form-number{
+    width: 400px;
+    margin-left: 30px;
+    border-radius: 10px;
+    border: 1px solid white;
+    text-align: center;
+}
+
+.Filter-form-tags{
+   display: flex;
+   flex-direction: column;
+   flex-wrap: wrap;
+   margin-top: 20px;
+   align-items:flex-start;
+}
+
+.Filter-form-type-cards{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.Filter-form-type-cards .checkBtn{
+    width: 100px;
+    font-size: 17px;
+    margin: 0px;
+    padding: 0;
+    cursor: pointer;
+    transition: .3s;
+    display: inline-block;
+    text-align: center;
+    border: solid 2px #000;
+    margin-left: 5px;
+    margin-right: 5px;
+    background-color: #ece5d0;
+}
+
+.checkBtn:hover {
+    background: #000;
+    color: #fff;
+}
+
+input:checked + .checkBtn {
+    background-color: #000;
+    color: white;
+}
+
+.Filter-form-type-cards input{
+    display: none;
+}
+
+.Filter-button{
+    display: grid;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+.Filter-form-submit{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    justify-self: center;
+    border-radius: 10px;
+    border: rgba(44, 43, 91, 0.74);
+    text-align: center;
+    width: 300px;
+    font-size: 20px;
+    height: 60px;
+    align-content: center;
+    color: white;
+    background-color: rgba(44, 43, 91, 0.74);
+    cursor: pointer;
+}
+
+.Filter-card-result{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+}
+
+.Filter-card{
+    display: grid;
+    grid-template-columns: 14rem;
+    justify-items: center;
+}
+
+.Filter-card-form{
+   display: flex;
+   flex-direction: row;
+}
+
+.Filter-card-name{
+    margin: 5px 10px;
+ }
+
+.Filter-card li{
+    list-style-type: none;
+    padding: 10px 0px;
+    display: flex;
+    justify-content: center;
+}
+
+.Filter-card img{
+    max-width: 200px;
+    max-height: 280px;
+    margin-top: 10px;
+
+}
+
+.Filter-card-button{
+    border-radius: 9px;
+    border: rgba(44, 43, 91, 0.74);
+    text-align: center;
+    width: 90px;
+    height: 30px;
+    color: white;
+    background-color: #3F3F69;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.Filter-card-button:hover{
+    background-color: #77778e;
+    cursor: pointer;
+}

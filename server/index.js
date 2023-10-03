@@ -3,9 +3,10 @@ const express = require("express")
 const cors = require("cors")
 const bodyParser = require("body-parser")
 const router = require('./routes/router')
-const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser')
 const mongoose = require("mongoose")
-const { adminAuth, userAuth } = require("./middleware/auth.js");
+const { userAuth } = require("./middleware/auth.js");
+
 
 const PORT = process.env.PORT || 3001;
 
@@ -24,7 +25,6 @@ app.use(cors(corsOptions))
 app.use(cookieParser());
 app.use('/', router)
 
-app.get("/admin", adminAuth, (req, res) => res.send("Admin Route"));
 app.get("/basic", userAuth, (req, res) => res.send("User Route"));
 
 app.get("/logout", (req, res) => {

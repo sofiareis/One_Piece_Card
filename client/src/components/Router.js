@@ -6,6 +6,8 @@ import Header from "./Header";
 import Card from '../pages/Card';
 import Missing from '../pages/Missing';
 import Wishlist from '../pages/Wishlist';
+import Login from '../pages/Login';
+import SignUp from '../pages/SignUp';
 
 function Router() {
     const Layout = () => {
@@ -36,6 +38,14 @@ function Router() {
                 {
                     path: "/",
                     element: <Landing />
+                },
+                {
+                    path: "/login",
+                    element: <Login />
+                },
+                {
+                    path: "/signup",
+                    element: <SignUp />
                 },
                 {
                     path: "/search",

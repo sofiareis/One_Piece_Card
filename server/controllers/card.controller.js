@@ -3,11 +3,10 @@ const Card = db.Card
 
 // Create and Save a new card
 exports.create = async(req, res) => {
-  // Validate request
-//   if (!req.body.title) {
-//     res.status(400).send({ message: "Content can not be empty!" });
-//     return;
-//   }
+  if (!req.body) {
+    res.status(400).json({ message: "Content can not be empty!" });
+    return;
+  }
   // Create a card
   const newCard = new Card({
     name: req.body.name,
@@ -22,19 +21,18 @@ exports.create = async(req, res) => {
   if (saveCard) {
     console.log(newCard)
     res.send('Card saved. Thank you.')
-    } else {
+  } else {
         res.status(500).send({
         message:
             err.message || "Some error occurred while creating the card."})
-}
-
+    }
 };
 
 // Retrieve all cards from the database.
 exports.findAll = async(req, res) => {
     await Card.find({})
       .then(data => {
-        res.send(data);
+        res.json({ message: "Got user collection successfully.", card: data });
       })
       .catch(err => {
         res.status(500).send({
@@ -43,28 +41,6 @@ exports.findAll = async(req, res) => {
         });
       });
 };
-
-
-exports.findDeck = async(req, res) => {
-  console.log(req.query)
-  const deck = req.query.deck;
-  if (!deck) {
-    res.status(400).json({ message: "Content can not be empty!", error: "Deck missing" });
-    return;
-  }
-
-  await Card.find({"deck" : deck})
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving cards."
-      });
-    });
-};
-
 
 // Retrieve all cards from the database based on condition.
 exports.findCard = async(req, res) => {
