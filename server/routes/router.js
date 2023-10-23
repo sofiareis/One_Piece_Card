@@ -27,17 +27,27 @@ router.get("/collection", userAuth, collection.getCollection);
 // Retrieve a users collection with condition
 router.get("/collection/condition", userAuth, collection.getCollectionCondition);
 
-// Update user's collection
-router.put("/userUpdateCollection", userAuth, collection.updateCardCollection);
+// Add a card to user's collection 
+router.put("/collection/add", userAuth, collection.addCardCollection);
 
+// Update user's cardcollection quantity
+router.put("/collection/quantity", userAuth, collection.quantityCardCollection);
+
+// Delete a card from user's collection 
+router.put("/collection/delete", userAuth, collection.deleteCardCollection);
 
 
 // Retrieve a users wishlist with id
 router.get("/wishlist", userAuth, wishlist.getWishlist);
 
 // Update user's wishlist
-router.put("/userUpdateWishlist",userAuth, wishlist.updateWishlist);
+router.put("/wishlist/add", userAuth, wishlist.updateWishlist);
 
+// Retrieve a users wishlist with condition
+router.get("/wishlist/condition", userAuth, wishlist.getWishlistCondition);
+
+// Delete a card from user's wishlist 
+router.put("/wishlist/delete", userAuth, wishlist.deleteCardWishlist);
 
 
 // Retrieve a users missing cards with id

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios"
 import { deck, cardType, cardColor, cardRarity } from "../components/CardInfo";
 import './Search.css'
+import Card from "../components/Card";
 
 function Search() {
     const [selectCard, setSelectCard] = useState([]);
@@ -85,7 +86,6 @@ function Search() {
         )
     }
 
-
     const handleTypeChange = ({target}) => {
         console.log(checkType)
         
@@ -103,40 +103,6 @@ function Search() {
         
         setCheckRarity(s => ({ ...s, [target.value]: !s[target.value] }));
     };
-
-    const addCardToCollection = async(e) => {
-        e.preventDefault()
-        const params = {
-            params: {
-                card: e.target.getAttribute('card'), 
-                quantity: 1
-            }
-        };
-        console.log(params)
-        console.log(e.target.getAttribute('card'))
-        await axios.put('/userUpdateCollection', params)
-        .then(res => {
-            console.log(res.data)
-        })
-        .catch(err => console.log(err))
-    }
-
-    const addCardToWishlist = async(e) => {
-        e.preventDefault()
-        const params = {
-            params: {
-                card: e.target.getAttribute('card'), 
-                quantity: 1
-            }
-        };
-        console.log(params)
-        console.log((e.target.getAttribute('card')))
-        await axios.put('/userUpdateWishlist', params)
-        .then(res => {
-            console.log(res.data)
-        })
-        .catch(err => console.log(err))
-    }
 
     return(
         <div className="Search">
@@ -201,14 +167,7 @@ function Search() {
             </div>
             <div className="Search-card-result">
                 {selectCard?.map( (item) => (
-                    <div className="Search-card">
-                        <a href="/card/001" className="card"><img className="card-img" src={require('../assets/images/OP01-001.png')} alt="OP01-001" /> </a>
-                        <p className="Search-card-name">{item.name}</p>
-                        <div className="Search-card-form">
-                            <button type="submit" className="Search-card-button" card={item._id} onClick={addCardToCollection}>Collection</button>
-                            <button type="submit" className="Search-card-button" card={item._id} onClick={addCardToWishlist}>Wishlist</button>
-                        </div>
-                    </div>
+                    <Card card={item} />
                 ))}
             </div>
         </div>
@@ -216,18 +175,3 @@ function Search() {
 }
 
 export default Search
-
-// <button onClick='' className="Search-form-number">Sort by card number</button>
-
-/*
-{cardType.map((value, index) => {
-                                    return(
-                                        <>
-                                            <input type="checkbox" name="type[]" id={`type_${value}`} 
-                                            value={value} checked={checkType[index]} onChange={() => handleTypeChange(index, value)}/>
-                                            <label className={`checkBtn isType_${value}`} for={`type_${value}`}>{value}</label>
-                                        </>
-                                    )
-                                    
-                                })}
-                            */

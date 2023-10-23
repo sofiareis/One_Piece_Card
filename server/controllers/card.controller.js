@@ -20,7 +20,7 @@ exports.create = async(req, res) => {
   const saveCard = await newCard.save()
   if (saveCard) {
     console.log(newCard)
-    res.send('Card saved. Thank you.')
+    res.status(201).send('Card saved. Thank you.')
   } else {
         res.status(500).send({
         message:
@@ -32,7 +32,7 @@ exports.create = async(req, res) => {
 exports.findAll = async(req, res) => {
     await Card.find({})
       .then(data => {
-        res.json({ message: "Got user collection successfully.", card: data });
+        res.status(200).json({ message: "Got user collection successfully.", card: data });
       })
       .catch(err => {
         res.status(500).send({
@@ -45,26 +45,23 @@ exports.findAll = async(req, res) => {
 // Retrieve all cards from the database based on condition.
 exports.findCard = async(req, res) => {
     const { deck, type, rarity, color, name } = req.query;
-    console.log(name)
+    try{
       var condition = {
-        name: {$regex: name},
-        deck: deck ? deck : ["OP01", "OP02", "OP03", "OP04", "OP05"],
-        type: type ? { "$in" : type } : ["Leader", "Character", "Stage", "Event"],
-        rarity: rarity ? { "$in" : rarity } : ["Common", "Uncommon", "Rare", "Super Rare", "Secret Rare", "Leader"],
-        color: color ? { "$in" : color } : ["Red", "Green", "Blue", "Purple", "Black", "Yellow", "Multicolor"]
+        name: name ? { $regex: new RegExp(name, 'i') } : /.*/, // Case-insensitive name search //{$regex: name},
+        deck: deck ? deck : { $in: ["OP01", "OP02", "OP03", "OP04", "OP05"] },
+        type: type ? { $in: type } : { $in: ["Leader", "Character", "Stage", "Event"] },
+        rarity: rarity ? { $in: rarity } : { $in: ["Common", "Uncommon", "Rare", "Super Rare", "Secret Rare", "Leader"] },
+        color: color ? { $in: color } : { $in: ["Red", "Green", "Blue", "Purple", "Black", "Yellow", "Multicolor"] },
       };
-   
-    //console.log(condition)
-    await Card.find(condition)
-      .then(data => {
-        res.status(201).send(data);
-      })
-      .catch(err => {
+      const cards = await Card.find(condition).exec();
+      
+      res.status(200).send(cards);
+    } catch(err) {
         res.status(500).send({
           message:
             err.message || "Some error occurred while retrieving cards."
         });
-      });
+      }
 };
 
 // Find a single card with an id
@@ -75,7 +72,7 @@ exports.findOne = async(req, res) => {
       .then(data => {
         if (!data)
           res.status(404).send({ message: "Not found card with id " + id });
-        else res.send(data);
+        else resstatus(200).send(data);
       })
       .catch(err => {
         res

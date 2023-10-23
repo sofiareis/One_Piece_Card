@@ -6,12 +6,10 @@ function CardCollection({ card }) {
     const [quantity, setQuantity] = useState(card.quantity);
     const [error, setError] = useState('');
 
-    console.log(card);
-
     const updateCardQuantity = async(e) => {
         e.preventDefault()
         if(quantity < 1){
-            setError("Quantity needs to be more than 0");
+            setError("Quantity needs to be bigger than 0");
         } else{
             setError('');
             const params = {
@@ -20,7 +18,7 @@ function CardCollection({ card }) {
                     quantity: quantity
                 }
             };
-            await axios.put('/userUpdateCollection', params)
+            await axios.put('/collection/quantity', params)
             .then(res => {
                 console.log(res.data)
             })
@@ -32,14 +30,11 @@ function CardCollection({ card }) {
         setQuantity(e.target.value);
       };
 
-    const handleDelete = (e) => {
-
-    }
-
     return(
         <div className="Collection-card">
             <a href="/card/001" className="card"><img className="card-img" src={require('../assets/images/OP01-001.png')} alt="OP01-001" /> </a>
             <p className="Collection-card-name">{card.card.name}</p>
+            <p className="Collection-card-error">{error}</p>
             <form className="Collection-card-form" onSubmit={updateCardQuantity}>
                 <label>
                     Quantity:
@@ -50,10 +45,8 @@ function CardCollection({ card }) {
                         className="Collection-input"
                     />
                 </label>
-                <p>{error}</p>
                 <button className="Collection-card-button" type="submit">Update</button>
             </form>
-            <button className="Collection-delete">Delete</button>
             
         </div>
     )
@@ -61,10 +54,3 @@ function CardCollection({ card }) {
 }
 
 export default CardCollection
-
-/*
-
-<button className="CardCollection-button" onClick={decreaseCardQuantity}>-</button>
-<p>{quantity}</p>
-<button className="CardCollection-button" onClick={increaseCardQuantity}>+</button>
-*/

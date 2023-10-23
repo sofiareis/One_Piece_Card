@@ -1,39 +1,85 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios"
-import './Collection.css'
-import Card from "../components/Card"
+import './Wishlist.css'
 
 function Wishlist() {
     const [data, setData] = useState([]);
+    const [error, setError] = useState('');
+
     useEffect(() => {
-        let processing = true
-        fetchUserWishlist(processing)
-        return () => {
-            processing = false
-        }
+        fetchUserWishlist()
     }, []);
 
 
-    const fetchUserWishlist = async(processing) => {
+    const fetchUserWishlist = async() => {
         await axios.get('/wishlist')
         .then(res => {
-            console.log(res.data)
-            if (processing) {
-                setData(res.data.card)
-            }
+            setData(res.data.card)
         })
         .catch(err => console.log(err))
         
     }
+
+    const handleDelete = (cardId) => {
+        const params = {
+            params: {
+                card: cardId, 
+            }
+        };
+        axios.put('/wishlist/delete', params)
+            .then(res => {
+                console.log(res.data)
+                setData(data.filter((card) => card._id !== cardId));
+            })
+            .catch(err => console.log(err))
+    }
+
+    const handleAddCardToCollection = (cardId) => {
+        const params = {
+            params: {
+                card: cardId,
+                quantity: 1
+            }
+        };
+        axios.put('/collection/add', params)
+        .then(res => {
+            axios.put('/wishlist/delete', params)
+            .then(res => {
+                console.log(res.data)
+                setData(data.filter((card) => card._id !== cardId));
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            if(err.response.status == 400){
+                //setError('You already have that card!')
+                axios.put('/wishlist/delete', params)
+                .then(res => {
+                    console.log(res.data)
+                    setData(data.filter((card) => card._id !== cardId));
+                })
+            }
+        })
+    }
     
     return(
-        <div className="Collection">
-            <p className="Collection-title">Your Wishlist</p>
+        <div className="Wishlist">
+            <p className="Wishlist-title">Your Wishlist</p>
             <p>{!data ? "Loading..." : 
-                <div className="Collection-card-result">
+                <div className="Wishlist-card-result">
                 {data?.map( (item) => (
-                        <Card card={item}/>
+                    <div className="Wishlist-card-div" key={item._id}>
+                        <div className="Wishlist-card">
+                            <a href="/card/001" className="card"><img className="card-img" src={require('../assets/images/OP01-001.png')} alt="OP01-001" /> </a>
+                            <p className="Wishlist-card-name">{item.name}</p>
+                            <div className="Wishlist-card-form">
+                                <button type="submit" className="Wishlist-card-button" card={item._id} onClick={() => handleAddCardToCollection(item._id)}>Move to Collection</button>
+                            </div>
+                            <p className="Wishlist-card-error">{error}</p>
+                        </div>
+                        <button className="Wishlist-delete" onClick={() => handleDelete(item._id)}>Delete</button>
+                    </div>
                 ))}
                 </div>
             }</p>
@@ -42,27 +88,4 @@ function Wishlist() {
 }
 
 export default Wishlist
-
-/*
-<ul className="Search-card-result">
-                <div className="Search-card">
-                        <li key='title-name' className="Search-card-title">Name</li>
-                        <li key='title-deck' className="Search-card-title">Deck</li>
-                        <li key='title-type' className="Search-card-title">Type</li>
-                        <li key='title-color' className="Search-card-title">Color</li>
-                        <li key='title-rarity' className="Search-card-title">Rarity</li>
-                    </div>
-                {selectCard?.map( (item) => (
-                    <div className="Search-card">
-                        <li key={item.name} className="Search-card-name">{item.name}</li>
-                        <li key={item.deck} className="Search-card-name">{item.deck}</li>
-                        <li key={item.type} className="Search-card-name">{item.type}</li>
-                        <li key={item.color} className="Search-card-name">{item.color}</li>
-                        <li key={item.rarity} className="Search-card-name">{item.rarity}</li>
-                        <li key={`collection_${item.name}`} className="Search-card-name">Collection</li>
-                        <li key={`wishlist${item.name}`} className="Search-card-name">Wishlist</li>
-                    </div>
-                ))}
-            </ul>
-*/
 

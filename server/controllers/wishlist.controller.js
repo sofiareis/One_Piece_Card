@@ -20,7 +20,7 @@ exports.getWishlist = async(req, res) => {
           res.status(404).json({
             message: `Cannot get user wishlist with id=${id}. Maybe user was not found!`
           });
-        } else res.status(201).json({ message: "Found user wishlist", card: data.wishlist });
+        } else res.status(200).json({ message: "Found user wishlist", card: data.wishlist });
       })
       .catch(err => {
         res.status(500).json({
@@ -54,7 +54,7 @@ exports.updateWishlist = async(req, res) => {
               res.status(404).json({
                 message: `Cannot update user with id=${id}. Maybe user was not found!`
               });
-            } else res.status(201).json({ message: "User wishlist was updated successfully." });
+            } else res.status(200).json({ message: "User wishlist was updated successfully." });
           })
           .catch(err => {
             res.status(500).json({
@@ -100,7 +100,7 @@ exports.updateWishlist = async(req, res) => {
             message: `Cannot get user collection with id=${id}. Maybe user was not found!`
           });
         } else {
-          res.status(201).json({ message: "Got user collection successfully.", card: data });
+          res.status(200).json({ message: "Got user collection successfully.", card: data });
           }
         })
         .catch(err => {
@@ -109,3 +109,31 @@ exports.updateWishlist = async(req, res) => {
           });
         });
   }
+
+  //Delete card from wishlist
+exports.deleteCardWishlist = async(req, res) => {
+  if (!req.body.params.card || !req.userId) {
+    return res.status(400).json({
+      message: "Data to update can not be empty!"
+    });
+  }
+  const id = req.userId
+  console.log(req.body.params.card)
+  try{
+    User.updateOne(
+        { _id: id },
+        { $pull: { wishlist: req.body.params.card } }
+      )
+      .then((data) => {
+        if (data.nModified === 0) {
+          res.status(404).send({ message: 'Card not found in user wishlist.' });
+        } else {
+          res.status(200).send({ message: 'Card removed from user wishlist.' });
+        }
+      })
+  }catch (error){
+    res.status(500).send({
+      message: error.message || 'Some error occurred while deleting the card from user wishlist.',
+    });
+  }
+}

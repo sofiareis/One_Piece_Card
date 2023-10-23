@@ -177,3 +177,8 @@ input:checked + .checkBtn {
     background-color: #77778e;
     cursor: pointer;
 }
+
+.Search-card-error{
+    margin: 4px;
+    font-size: 17px;
+}

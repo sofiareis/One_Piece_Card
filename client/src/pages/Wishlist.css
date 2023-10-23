@@ -1,16 +1,16 @@
-.Collection{
+.Wishlist{
     font-size: 20px;
     margin: 40px;
 }
 
-.Collection-title{
+.Wishlist-title{
     margin-left: 30px;
     margin-bottom: 10px;
     font-size: 40px;
     margin-top: 90px;
 }
 
-.Collection-card-result{
+.Wishlist-card-result{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -19,46 +19,39 @@
     padding: 0px;
 }
 
-.Collection-card-div{
+.Wishlist-card-div{
     display: grid;
     justify-items: center;
    
 }
 
-.Collection-card{
+.Wishlist-card{
     display: grid;
     grid-template-columns: 14rem;
     justify-items: center;
 }
 
-.Collection-card-form{
+.Wishlist-card-form{
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
 }
 
-.Collection-card-name{
+.Wishlist-card-name{
     margin: 5px 0px;
     text-align: center;
  }
 
-.Collection-card img{
+.Wishlist-card img{
     max-width: 200px;
     max-height: 280px;
     margin-top: 10px;
 
 }
 
-.Collection-input{
-    max-width: 25px;
-    margin: 0px 5px;
-    text-align: center;
-    border-color: rgba(44, 43, 91, 0.74);
-}
-
-.Collection-delete{
-    margin: 5px 0px;
+.Wishlist-delete{
+    margin: 0px 0px;
     border-radius: 0px;
     border-color: transparent;
     background-color: transparent;
@@ -66,11 +59,11 @@
     cursor: pointer;
 }
 
-.Collection-card-button{
+.Wishlist-card-button{
     border-radius: 9px;
     border: rgba(44, 43, 91, 0.74);
     text-align: center;
-    width: 70px;
+    width: 130px;
     height: 30px;
     color: white;
     background-color: #3F3F69;
@@ -79,12 +72,12 @@
     cursor: pointer;
 }
 
-.Collection-card-button:hover{
+.Wishlist-card-button:hover{
     background-color: #77778e;
     cursor: pointer;
 }
 
-.Collection-card-error{
+.Wishlist-card-error{
     font-size: 14px;
     margin: 4px 0px;
     color: red;
