@@ -58,7 +58,7 @@ function Search() {
             params: {
                 name: searchCard,
                 deck: selectSet,
-                type: type,
+                category: type,
                 rarity: rarity,
                 color: color,
             }

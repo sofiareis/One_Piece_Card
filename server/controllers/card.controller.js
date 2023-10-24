@@ -1,5 +1,5 @@
 const db = require("../models/schemas")
-import { category } from "../models/card.type";
+const cardTypes =  require("../models/card.type");
 const Card = db.Card
 
 // Create and Save a new card
@@ -51,21 +51,14 @@ exports.findAll = async(req, res) => {
 // Retrieve all cards from the database based on condition.
 exports.findCard = async(req, res) => {
     const { deck, category, rarity, color, name } = req.query;
-    console.log("uoiy")
-    console.log(name)
     try{
       var condition = {
         //cid: name ? { $regex: new RegExp(name, 'i') } : /.*/, // Case-insensitive name search //{$regex: name},
         name: name ? { $regex: new RegExp(name, 'i') } : /.*/, // Case-insensitive name search //{$regex: name},
-        category: category ? category : { $in: category },
+        category: category ? category : { $in: cardTypes.category },
         //deck: deck ? deck : { $in: ["OP01", "OP02", "OP03", "OP04", "OP05"] },
-        //rarity: rarity ? { $in: rarity } : { $in: rarity },
-        //color: color ? { $in: color } : { $in: color },
-        
-        //category: category ? category : { $in: ["OP01", "OP02", "OP03", "OP04", "OP05"] },
-        //deck: deck ? deck : { $in: ["OP01", "OP02", "OP03", "OP04", "OP05"] },
-        //rarity: rarity ? { $in: rarity } : { $in: ["Common", "Uncommon", "Rare", "Super Rare", "Secret Rare", "Leader"] },
-        //color: color ? { $in: color } : { $in: ["Red", "Green", "Blue", "Purple", "Black", "Yellow", "Multicolor"] },
+        rarity: rarity ? { $in: rarity } : { $in: cardTypes.rarity },
+        color: color ? { $in: color } : { $in: cardTypes.color },
       };
       const cards = await Card.find(condition).exec();
       console.log(cards)

@@ -1,4 +1,4 @@
-export const category = [
+const category = [
     "Leader",
     "Character",
     "Event",
@@ -6,7 +6,7 @@ export const category = [
     "DON!!",
 ]
 
-export const color = [
+const color = [
     "Red",
     "Green",
     "Blue",
@@ -32,7 +32,7 @@ export const color = [
     "Green/Purple",
 ]
 
-export const rarity = [
+const rarity = [
     "Leader",
     "Common",
     "Uncommon",
@@ -40,3 +40,6 @@ export const rarity = [
     "Super Rare",
     "Secret Rare",
 ]
+
+cardTypes = {rarity, category, color}
+module.exports = cardTypes

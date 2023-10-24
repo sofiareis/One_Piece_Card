@@ -10,7 +10,8 @@ export const cardType = [
     "Leader",
     "Character",
     "Stage",
-    "Event"
+    "Event",
+    "DON!!",
 ]
 
 export const cardColor = [
@@ -32,6 +33,7 @@ export const cardRarity = [
     "Leader"
 ]
 
+/*
 const category = {
     1: "Leader",
     2: "Character",
@@ -74,3 +76,5 @@ const rarity = {
     5: "Super Rare",
     6: "Secret Rare",
 }
+
+*/
