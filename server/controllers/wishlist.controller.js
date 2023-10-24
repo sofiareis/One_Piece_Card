@@ -9,24 +9,26 @@ exports.getWishlist = async(req, res) => {
       });
     }
     const id = req.userId;
-    
-    await db.Users.
-      findOne({ _id: id }).
-      populate('wishlist').
-      exec()
-      .then(data => {
-        console.log(data.wishlist)
-        if (!data) {
-          res.status(404).json({
+
+    try{
+      const data = await db.Users.
+        findOne({ _id: id }).
+        populate({path: 'wishlist', options: { sort: { name: 1 } } }).
+        exec()
+
+      if (!data) {
+        return res.status(404).json({
             message: `Cannot get user wishlist with id=${id}. Maybe user was not found!`
-          });
-        } else res.status(200).json({ message: "Found user wishlist", card: data.wishlist });
-      })
-      .catch(err => {
+        });
+      } 
+      
+      res.status(200).json({ message: "Found user wishlist", card: data.wishlist });
+        
+    } catch(err) {
         res.status(500).json({
           message: err.message
         });
-      });
+      }
   }
 
   

@@ -9,13 +9,20 @@ exports.getMissing = async(req, res) => {
         message: "Need user id"
       });
     }
-    const id = req.userId;
-          
+    const id = req.userId;   
+
     try{
         const userCards = await User.findOne({ _id: id }, { 'cardCollection.card': 1 });
         const userCardIds = userCards.cardCollection.map((item) => item.card);
         const missingCards = await Card.find({ _id: { $nin: userCardIds } });
-        res.status(200).send({ message: 'Got user missing cards', card: missingCards });
+
+        const sortedMissingCards = missingCards.sort((a, b) => {
+          const nameA = a.name.toUpperCase();
+          const nameB = b.name.toUpperCase();
+          return nameA.localeCompare(nameB);
+        });
+
+        res.status(200).send({ message: 'Got user missing cards', card: sortedMissingCards });
     } catch(err) {
       res.status(500).send({
         message:

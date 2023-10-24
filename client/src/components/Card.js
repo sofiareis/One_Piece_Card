@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import axios from "axios"
+import axios from '../services/axiosConfig';
 
 function Card({ card }) {
     const [error, setError] = useState('');
@@ -38,7 +38,7 @@ function Card({ card }) {
         };
         console.log(params)
         console.log((e.target.getAttribute('card')))
-        await axios.put('/userUpdateWishlist', params)
+        await axios.put('/wishlist/add', params)
         .then(res => {
             console.log(res.data)
         })
@@ -48,7 +48,7 @@ function Card({ card }) {
 
     return(
                     <div className="Search-card">
-                        <a href="/card/001" className="card"><img className="card-img" src={require('../assets/images/OP01-001.png')} alt="OP01-001" /> </a>
+                        <a href={`/card/${card.cid}`} className="card"><img className="card-img" src={card.image} alt={`${card.cid}`} /> </a>
                         <p className="Search-card-name">{card.name}</p>
                         <div className="Search-card-form">
                             <button type="submit" className="Search-card-button" card={card._id} onClick={addCardToCollection}>Collection</button>

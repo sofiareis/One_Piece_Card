@@ -9,22 +9,31 @@ exports.getCollection = async(req, res) => {
       });
     }
     const id = req.userId;
-    await db.Users.
+    try{
+      const data = await db.Users.
       findOne({ _id: id }).
       populate('cardCollection.card').
       exec()
-      .then(data => {
-        if (!data) {
-          res.status(404).json({
-            message: `Cannot get user collection with id=${id}. Maybe user was not found!`
-          });
-        } else res.status(200).json({ message: "Got user collection successfully.", card: data.cardCollection });
-      })
-      .catch(err => {
+
+      if (!data) {
+        return res.status(404).json({
+          message: `Cannot get user collection with id=${id}. Maybe user was not found!`
+        });
+      } 
+        
+      const sortedCollection = data.cardCollection.sort((a, b) => {
+        const nameA = a.card.name.toUpperCase();
+        const nameB = b.card.name.toUpperCase();
+        return nameA.localeCompare(nameB);
+      });
+
+      res.status(200).json({ message: "Got user collection successfully.", card: data.cardCollection });
+      
+    } catch(err) {
         res.status(500).json({
           message: err.message
         });
-      });
+      }
   }
   
 

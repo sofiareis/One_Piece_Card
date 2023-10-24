@@ -76,7 +76,7 @@ exports.login = async(req, res) => {
         if (result) {
           const maxAge = 3 * 60 * 60;
           const token = jwt.sign(
-            { id: user._id, username , entryDate: user.entryDate},
+            { id: user._id, username, entryDate: user.entryDate},
               process.env.CRYPTO,
             {
               expiresIn: maxAge, // 3hrs in sec
@@ -84,6 +84,7 @@ exports.login = async(req, res) => {
           );
           res.cookie("jwt", token, {
             httpOnly: true,
+            secure: true,
             maxAge: maxAge * 1000, // 3hrs in ms
           });
           res.status(201).json({

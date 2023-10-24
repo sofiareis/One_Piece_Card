@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import axios from "axios"
+import axios from '../services/axiosConfig';
 
 function CardCollection({ card }) {
     const [quantity, setQuantity] = useState(card.quantity);

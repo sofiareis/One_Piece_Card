@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import axios from "axios"
+import axios from '../services/axiosConfig';
 import './Landing.css';
 
 function Login() {
@@ -16,7 +16,7 @@ function Login() {
         await axios.post('/login', postData)
         .then(res => {
             if(res.status === 201){
-                localStorage.setItem("user", JSON.stringify(res.data.user))
+                //localStorage.setItem("user", JSON.stringify(res.data.user))
                 window.location.assign('/search')
             }
             console.log(res)

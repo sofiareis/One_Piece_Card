@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import axios from "axios"
+import axios from '../services/axiosConfig';
 import './Wishlist.css'
 
 function Wishlist() {

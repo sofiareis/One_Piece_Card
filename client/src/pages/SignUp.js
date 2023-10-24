@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import axios from "axios"
+import axios from '../services/axiosConfig';
 import './Landing.css';
 
 function SignUp() {
@@ -18,7 +18,7 @@ function SignUp() {
         await axios.post('/user', postData)
         .then(res => {
             if(res.status === 201){
-                localStorage.setItem("user",  JSON.stringify(res.data.user))
+                //localStorage.setItem("user",  JSON.stringify(res.data.user))
                 console.log(res.data.user)
                 window.location.assign('/collection')
             }

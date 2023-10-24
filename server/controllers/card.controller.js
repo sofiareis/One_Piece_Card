@@ -1,4 +1,5 @@
 const db = require("../models/schemas")
+import { category } from "../models/card.type";
 const Card = db.Card
 
 // Create and Save a new card
@@ -9,11 +10,16 @@ exports.create = async(req, res) => {
   }
   // Create a card
   const newCard = new Card({
+    cid: req.body.cid,
     name: req.body.name,
-    deck: req.body.deck,
-    type: req.body.type,
+    category: req.body.category,
     color: req.body.color,
-    rarity: req.body.rarity
+    type: req.body.type,
+    power: req.body.power,
+    rarity: req.body.rarity,
+    image: req.body.image,
+    alternate: req.body.alternate,
+    deck: req.body.deck
   });
 
   // Save card in the database
@@ -44,16 +50,25 @@ exports.findAll = async(req, res) => {
 
 // Retrieve all cards from the database based on condition.
 exports.findCard = async(req, res) => {
-    const { deck, type, rarity, color, name } = req.query;
+    const { deck, category, rarity, color, name } = req.query;
+    console.log("uoiy")
+    console.log(name)
     try{
       var condition = {
+        //cid: name ? { $regex: new RegExp(name, 'i') } : /.*/, // Case-insensitive name search //{$regex: name},
         name: name ? { $regex: new RegExp(name, 'i') } : /.*/, // Case-insensitive name search //{$regex: name},
-        deck: deck ? deck : { $in: ["OP01", "OP02", "OP03", "OP04", "OP05"] },
-        type: type ? { $in: type } : { $in: ["Leader", "Character", "Stage", "Event"] },
-        rarity: rarity ? { $in: rarity } : { $in: ["Common", "Uncommon", "Rare", "Super Rare", "Secret Rare", "Leader"] },
-        color: color ? { $in: color } : { $in: ["Red", "Green", "Blue", "Purple", "Black", "Yellow", "Multicolor"] },
+        category: category ? category : { $in: category },
+        //deck: deck ? deck : { $in: ["OP01", "OP02", "OP03", "OP04", "OP05"] },
+        //rarity: rarity ? { $in: rarity } : { $in: rarity },
+        //color: color ? { $in: color } : { $in: color },
+        
+        //category: category ? category : { $in: ["OP01", "OP02", "OP03", "OP04", "OP05"] },
+        //deck: deck ? deck : { $in: ["OP01", "OP02", "OP03", "OP04", "OP05"] },
+        //rarity: rarity ? { $in: rarity } : { $in: ["Common", "Uncommon", "Rare", "Super Rare", "Secret Rare", "Leader"] },
+        //color: color ? { $in: color } : { $in: ["Red", "Green", "Blue", "Purple", "Black", "Yellow", "Multicolor"] },
       };
       const cards = await Card.find(condition).exec();
+      console.log(cards)
       
       res.status(200).send(cards);
     } catch(err) {

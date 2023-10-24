@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation } from 'react-router-dom';
 import './Header.css'
-import axios from "axios"
+import axios from '../services/axiosConfig';
 import LogoutIcon from '../assets/images/logout.svg'
 
 function Header() {
@@ -22,7 +22,7 @@ function Header() {
 
     //NEEDS ERROR HANDLING?
     const logout = async() => {
-        localStorage.removeItem("user");
+        //rage.removeItem("user");
         return await axios.get('/logout')
             .then(res => {return res.data})
     }
@@ -34,7 +34,6 @@ function Header() {
             <a className="nav-bar-title" href="/missing">Missing</a>
             <a className="nav-bar-title" href="/wishlist">Wishlist</a>
             <div className="logout">
-                
                 <button className="logout-button" onClick={logout}><a href="/">Log Out</a></button>
             </div>
         </nav>

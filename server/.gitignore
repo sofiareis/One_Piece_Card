@@ -1,2 +1,7 @@
 /node_modules
 .env
+
+/models/testData.json
+/models/newData.json
+/models/onepiececards.json
+/models/cards.js

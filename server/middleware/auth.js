@@ -21,6 +21,6 @@ exports.userAuth = (req, res, next) => {
       })
     } else {
       //req.isAuth = false;
-      return res.status(401).json({ message: "Not authorized, token not available" })
+      return res.status(401).json({ message: "Not authorized, token expired" })
     }
   }
