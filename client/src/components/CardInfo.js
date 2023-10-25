@@ -1,11 +1,3 @@
-export const deck = [
-    "OP01",
-    "OP02",
-    "OP03",
-    "OP04",
-    "OP05",
-]
-
 export const cardType = [
     "Leader",
     "Character",
@@ -31,6 +23,27 @@ export const cardRarity = [
     "Super Rare",
     "Secret Rare",
     "Leader"
+]
+
+export const deck = [
+    'Romance Dawn [OP-01]', 
+    'Paramount War [OP-02]',
+    'Pillars of Strength [OP-03]', 
+    'Kingdoms of Intrigue [OP-04]', 
+    'Awakening of the New Era [OP-05]',
+    'Straw Hat Crew [ST-01]',
+    'Worst Generation [ST-02]', 
+    'The Seven Warlords of the Sea [ST-03]',
+    'Animal Kingdom Pirates [ST-04]', 
+    'One Piece Film Edition [ST-05]', 
+    'Navy [ST-06]', 
+    'Big Mom Pirates [ST-07]',
+    'Side - Monkey D. Luffy [ST-08]', 
+    'Side - Yamato [ST-09]', 
+    'The Three Captains [ST-10]', 
+    'Side - Uta [ST-11]',
+    'Promo [P]', 
+    'Misc [MISC]',
 ]
 
 /*

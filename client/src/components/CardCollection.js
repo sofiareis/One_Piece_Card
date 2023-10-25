@@ -32,7 +32,7 @@ function CardCollection({ card }) {
 
     return(
         <div className="Collection-card">
-            <a href="/card/001" className="card"><img className="card-img" src={require('../assets/images/OP01-001.png')} alt="OP01-001" /> </a>
+            <a href={`/card/${card.card.cid}`}><img className="card-img" src={card.card.image} alt={`${card.card.cid}`} /> </a>
             <p className="Collection-card-name">{card.card.name}</p>
             <p className="Collection-card-error">{error}</p>
             <form className="Collection-card-form" onSubmit={updateCardQuantity}>

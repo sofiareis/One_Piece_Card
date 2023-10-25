@@ -59,7 +59,7 @@ function Missing() {
                 <div className="Missing-card-result">
                 {data?.map( (item) => (
                     <div className="Missing-card">
-                        <a href="/card/001" className="card"><img className="card-img" src={require('../assets/images/OP01-001.png')} alt="OP01-001" /> </a>
+                        <a href={`/card/${item.cid}`}><img className="card-img" src={item.image} alt={`${item.cid}`} /> </a>
                         <p className="Missing-card-name">{item.name}</p>
                         <div className="Missing-card-form">
                             <button type="submit" className="Missing-card-button" onClick={() => handleAddCardToCollection(item._id)}>Collection</button>

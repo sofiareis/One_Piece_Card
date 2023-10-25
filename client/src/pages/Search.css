@@ -41,7 +41,7 @@
 
 .Search-form-dropdown{
     width: 440px;
-    margin-left: 30px;
+    height: 60px;
     border-radius: 10px;
     border: 1px solid white;
     text-align: center;
@@ -65,17 +65,22 @@
    align-items:flex-start;
 }
 
+.Search-form-title{
+    margin-top: 20px;
+    margin-bottom: 12px;
+}
+
 .Search-form-type-cards{
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: start
 }
 
 .Search-form-type-cards .checkBtn{
     width: 100px;
     font-size: 17px;
-    margin: 0px;
-    padding: 0;
+    margin: 8px 0px;
+    padding: 0px;
     cursor: pointer;
     transition: .3s;
     display: inline-block;
@@ -132,19 +137,35 @@ input:checked + .checkBtn {
     padding: 0px;
 }
 
-.Search-card{
+.Search-cardgrid{
     display: grid;
-    grid-template-columns: 14rem;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: 20px;
+    justify-content: center;
+}
+
+.Search-card{
     justify-items: center;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow:   rgba(99, 99, 99, .2) 0px 2px 8px 0px;
+    padding: 20px;
+    text-align: center;
 }
 
 .Search-card-form{
    display: flex;
    flex-direction: row;
+   justify-content: center;
 }
 
 .Search-card-name{
-    margin: 5px 10px;
+    margin: 5px 0px;
+ }
+
+ .Search-card-cid{
+    font-size: 15px;
+    margin: 8px 0px;
  }
 
 .Search-card li{
@@ -155,10 +176,8 @@ input:checked + .checkBtn {
 }
 
 .Search-card img{
-    max-width: 200px;
-    max-height: 280px;
-    margin-top: 10px;
-
+    max-width: 100%;
+    max-height: auto;
 }
 
 .Search-card-button{
@@ -178,7 +197,68 @@ input:checked + .checkBtn {
     cursor: pointer;
 }
 
-.Search-card-error{
-    margin: 4px;
-    font-size: 17px;
+.Search-card-alert{
+   font-size: 14px;
+   font-weight: 600;
+}
+
+.Search-wishlist-delete{
+    border-radius: 5px;
+    border: rgba(44, 43, 91, 0.74);
+    text-align: center;
+    height: 20px;
+    color: rgb(0, 0, 0);
+    font-size: 14px;
+    background-color: #c5c5ed;
+}
+
+
+
+/*Smaller screens adapt*/
+
+/*1000px*/
+@media screen and (max-width: 1000px) {
+    .Search-form-choose{
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .Search-form-dropdown{
+        margin-left: 0px;
+        margin-top: 20px;
+    }
+    
+}
+
+/*600px*/
+@media screen and (max-width: 600px) {
+    .Search-form-tags{
+        display: none;
+    }
+
+    .Search-form-choose input,
+    .Search-form-dropdown {
+        width: 280px;
+    }
+
+    .Search-form-submit{
+        width: 280px;
+    }
+    
+}
+
+/*600px*/
+@media screen and (max-width: 500px) {
+    .Search{
+        margin: 30px;
+    }
+
+    .Search-search{
+        padding: 30px 0px;
+    }
+
+    .Search-form{
+        padding: 30px 0px;
+    }
 }

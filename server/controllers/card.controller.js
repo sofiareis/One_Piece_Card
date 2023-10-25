@@ -36,7 +36,7 @@ exports.create = async(req, res) => {
 
 // Retrieve all cards from the database.
 exports.findAll = async(req, res) => {
-    await Card.find({})
+    await Card.find({}).sort({cid: 1 })
       .then(data => {
         res.status(200).json({ message: "Got user collection successfully.", card: data });
       })
@@ -53,14 +53,16 @@ exports.findCard = async(req, res) => {
     const { deck, category, rarity, color, name } = req.query;
     try{
       var condition = {
-        //cid: name ? { $regex: new RegExp(name, 'i') } : /.*/, // Case-insensitive name search //{$regex: name},
-        name: name ? { $regex: new RegExp(name, 'i') } : /.*/, // Case-insensitive name search //{$regex: name},
+        $or: [
+          {cid: name ? { $regex: new RegExp(name, 'i') } : /.*/}, // Case-insensitive name search //{$regex: name},
+          {name: name ? { $regex: new RegExp(name, 'i') } : /.*/} // Case-insensitive name search //{$regex: name},
+        ],
         category: category ? category : { $in: cardTypes.category },
-        //deck: deck ? deck : { $in: ["OP01", "OP02", "OP03", "OP04", "OP05"] },
+        deck: deck ? deck : { $in: cardTypes.deck },
         rarity: rarity ? { $in: rarity } : { $in: cardTypes.rarity },
         color: color ? { $in: color } : { $in: cardTypes.color },
       };
-      const cards = await Card.find(condition).exec();
+      const cards = await Card.find(condition).sort({cid: 1 }).exec();
       console.log(cards)
       
       res.status(200).send(cards);

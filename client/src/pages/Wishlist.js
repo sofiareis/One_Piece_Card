@@ -71,7 +71,7 @@ function Wishlist() {
                 {data?.map( (item) => (
                     <div className="Wishlist-card-div" key={item._id}>
                         <div className="Wishlist-card">
-                            <a href="/card/001" className="card"><img className="card-img" src={require('../assets/images/OP01-001.png')} alt="OP01-001" /> </a>
+                        <a href={`/card/${item.cid}`}><img className="card-img" src={item.image} alt={`${item.cid}`} /> </a>
                             <p className="Wishlist-card-name">{item.name}</p>
                             <div className="Wishlist-card-form">
                                 <button type="submit" className="Wishlist-card-button" card={item._id} onClick={() => handleAddCardToCollection(item._id)}>Move to Collection</button>

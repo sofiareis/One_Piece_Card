@@ -63,6 +63,8 @@ exports.updateWishlist = async(req, res) => {
               message: err.message
             });
           });
+      } else{
+        res.status(409).json({ message: "Card already in wishlist" });
       }
     }
   } catch (error){

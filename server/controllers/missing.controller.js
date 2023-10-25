@@ -17,8 +17,8 @@ exports.getMissing = async(req, res) => {
         const missingCards = await Card.find({ _id: { $nin: userCardIds } });
 
         const sortedMissingCards = missingCards.sort((a, b) => {
-          const nameA = a.name.toUpperCase();
-          const nameB = b.name.toUpperCase();
+          const nameA = a.cid;
+          const nameB = b.cid;
           return nameA.localeCompare(nameB);
         });
 

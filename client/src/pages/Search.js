@@ -115,7 +115,7 @@ function Search() {
                     </div>
                     <div className="Search-form-tags">
                         <div className="Search-form-type">
-                            <p>Card Type</p>
+                            <p className="Search-form-title">Card Type</p>
                             <div className="Search-form-type-cards">
                                 {cardType.map((value, index) => {
                                     return(
@@ -130,7 +130,7 @@ function Search() {
                             </div>
                         </div>
                         <div className="Search-form-color">
-                            <p>Card Color</p>
+                            <p className="Search-form-title">Card Color</p>
                             <div className="Search-form-type-cards">
                                 {cardColor.map((value, index) => {
                                     return(
@@ -145,7 +145,7 @@ function Search() {
                             </div>
                         </div>
                         <div className="Search-form-rarity">
-                            <p>Card Rarity</p>
+                            <p className="Search-form-title">Card Rarity</p>
                             <div className="Search-form-type-cards">
                                 {cardRarity.map((value, index) => {
                                     return(
@@ -165,7 +165,7 @@ function Search() {
                     </div>
                 </form>
             </div>
-            <div className="Search-card-result">
+            <div className="Search-cardgrid">
                 {selectCard?.map( (item) => (
                     <Card card={item} />
                 ))}
